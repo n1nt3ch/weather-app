@@ -1,16 +1,25 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
-import { Button } from "@/components/ui/button"
+import Layout from './components/Layout'
+import { ThemeProvider } from './context/theme-provider'
 
 function App() {
 
 
-  return (<>
-    <div>
-      first project nahui
-      <Button variant="destructive">sosew</Button>
-    </div>
-    
-  </>)
+  return (
+    <BrowserRouter>
+      <ThemeProvider defaultTheme='dark'>
+        <Layout>
+          Hello
+          <Routes>
+            <Route>
+              
+            </Route>
+          </Routes>
+        </Layout>
+      </ThemeProvider>
+    </BrowserRouter>
+  )
 }
 
 export default App
