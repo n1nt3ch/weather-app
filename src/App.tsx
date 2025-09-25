@@ -2,6 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Layout from './components/Layout'
 import { ThemeProvider } from './context/theme-provider'
+import WeatherDashboard from './pages/weather-dashboard'
+import City from './pages/city'
 
 function App() {
 
@@ -10,11 +12,9 @@ function App() {
     <BrowserRouter>
       <ThemeProvider defaultTheme='dark'>
         <Layout>
-          Hello
           <Routes>
-            <Route>
-              
-            </Route>
+            <Route path='/' element={<WeatherDashboard/>}/>
+            <Route path='/city/:cityName' element={<City/>}/>
           </Routes>
         </Layout>
       </ThemeProvider>
