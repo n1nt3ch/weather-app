@@ -1,28 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { type WeatherData } from './types'
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const BASE_URL = 'https://api.openweathermap.org/data/2.5'
 
-export interface WeatherData {
-  name: string
-  main: {
-    temp: number
-    feels_like: number
-    humidity: number
-    pressure: number
-  }
-  weather: Array<{
-    main: string
-    description: string
-    icon: string
-  }>
-  wind: {
-    speed: number
-  }
-  sys: {
-    country: string
-  }
-}
+
 
 export const weatherApi = createApi({
   reducerPath: 'weatherApi',
