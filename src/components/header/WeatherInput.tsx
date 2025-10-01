@@ -1,5 +1,7 @@
-import { useState } from 'react'
-import { useGetCurrentWeatherQuery } from '../store/weatherApi/weatherApi.ts'
+import React from 'react'
+import { useState } from "react";
+import { useGetCurrentWeatherQuery } from "@/store/weatherApi/weatherApi";
+
 
 export const WeatherSearch = () => {
   const [city, setCity] = useState('')
@@ -49,3 +51,5 @@ export const WeatherSearch = () => {
     </div>
   )
 }
+
+export default WeatherSearch

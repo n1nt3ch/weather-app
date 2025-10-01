@@ -18,15 +18,15 @@ export const weatherApi = createApi({
         `/weather?q=${city}&appid=${API_KEY}&units=metric&lang=ru`,
       providesTags: ['Weather'],
     }),
-    getWeatherByCoords: builder.query<WeatherData, { lat: number; lon: number }>({
-      query: ({ lat, lon }) =>
-        `/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=ru`,
-      providesTags: ['Weather'],
-    }),
+    // getWeatherByCoords: builder.query<WeatherData, { lat: number; lon: number }>({
+    //   query: ({ lat, lon }) =>
+    //     `/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=ru`,
+    //   providesTags: ['Weather'],
+    // }),
   }),
 })
 
 export const { 
   useGetCurrentWeatherQuery, 
-  useGetWeatherByCoordsQuery 
+  // useGetWeatherByCoordsQuery 
 } = weatherApi

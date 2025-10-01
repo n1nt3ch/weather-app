@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react'
 import Header from './header/Header'
-import { WeatherSearch } from './WeatherSearch'
+import { WeatherDisplay } from './main/WeatherDisplay'
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
@@ -13,7 +13,7 @@ const Layout = ({ children }: PropsWithChildren) => {
             <h1 className="text-4xl font-bold text-white text-center mb-8">
               Погодное приложение
             </h1>
-            <WeatherSearch />
+            <WeatherDisplay/>
           </div>
         </div>
       </main>
