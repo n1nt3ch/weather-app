@@ -1,23 +1,59 @@
 import { useTheme } from "@/context/theme-provider"
-import { Moon, Sun } from "lucide-react";
+import { useEffect } from "react"
+import { useDispatch, useSelector } from 'react-redux'
+import { Moon, Sun } from "lucide-react"
 import { Link } from "react-router-dom"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../ui/alert"
+import { AlertCircleIcon } from "lucide-react"
+import { Button } from '../ui/button'
 
-import WeatherSearch from './WeatherInput.tsx'
+import type { AppDispatch } from '@/store'
+import type { RootState } from "@/store"
 
+import { setDarkTheme, setLightTheme } from "@/store/slices/themeSlice/themeSlice.ts"
+
+import WeatherInput from './WeatherInput.tsx'
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
   const isDark = theme === 'dark';
+  const dispatch = useDispatch<AppDispatch>()
 
+  const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
+  
+  useEffect(() => {
+      if (isDark) {
+        dispatch(setDarkTheme());
+      } else {
+        dispatch(setLightTheme());
+      }
+    }, [isDark, dispatch]);
+  
   return (
     <header className="sticky top-0 border-b z-50 bg-background/95 backdrop-blur py-2 supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between">
         <Link to={'/'}>
-          <img src={theme === 'dark' ? 'src/context/weather-logo(dark).png' : 'src/context/weather-logo(light).png'} 
+          <img src={isDark ? 'src/context/icons/weather-logo(dark).png' : 'src/context/icons/weather-logo(light).png'} 
           alt="Weather app logo" 
           className="h-14"/>
         </Link>
-        <WeatherSearch/>
+        <WeatherInput/>
+        {weatherError.length > 0 && 
+          <Alert variant="destructive" className="w-80 position absolute left-1/2 top-1 bg-accent">
+            <AlertCircleIcon className="h-4 w-4"/>
+            <AlertTitle className="flex justify-between">
+              Ошибка
+              <Button className="h-0.5 w-0.5 text-color-red  text-center cursor-pointer">x</Button>
+            </AlertTitle>
+            <AlertDescription>
+              {weatherError}
+            </AlertDescription>
+          </Alert>
+        }
         <div>
           <button onClick={() => setTheme(isDark ? 'light' : 'dark')}
           className={`flex items-center cursor-pointer transition-transform duration-500
