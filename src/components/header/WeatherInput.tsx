@@ -59,19 +59,19 @@ const WeatherInput = () => {
       .join('')
   }
 
+  const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
+
   const handleSubmit = useCallback(async (e: any) => {
     e.preventDefault()
-    clearQueryError()
     if (inputCity.trim()) {
       const result = await getCurrentQueryWeather(inputCity)
-      console.log(getErrorMessage(result.error))
       if (result.data) {
         setQueryCity(result.data.name)
         dispatch(setCity(result.data.name))
       }
       if (result.error) {
         const errorMsg = getErrorMessage(result.error)
-        setQueryError(errorMsg)
+        dispatch(setQueryError(errorMsg))
       }
     }
   }, [inputCity])
@@ -79,7 +79,7 @@ const WeatherInput = () => {
   const handleEditCity = () => {
     setQueryCity('')
     setInputCity('')
-    clearQueryError()
+    console.log(weatherError)
   }
 
 
@@ -115,6 +115,7 @@ const WeatherInput = () => {
             onClick={() => {
               setInputCity('')
               dispatch(clearCity())
+              dispatch(clearQueryError())
             }}
             placeholder="Введите город..."
             className="border p-2 mr-2 rounded"

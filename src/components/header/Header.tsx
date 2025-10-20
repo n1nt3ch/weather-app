@@ -15,6 +15,7 @@ import type { AppDispatch } from '@/store'
 import type { RootState } from "@/store"
 
 import { setDarkTheme, setLightTheme } from "@/store/slices/themeSlice/themeSlice.ts"
+import { clearQueryError } from "@/store/slices/weatherSlice/currentQueryError.ts"
 
 import WeatherInput from './WeatherInput.tsx'
 
@@ -42,12 +43,14 @@ const Header = () => {
           className="h-14"/>
         </Link>
         <WeatherInput/>
-        {weatherError.length > 0 && 
-          <Alert variant="destructive" className="w-80 position absolute left-1/2 top-1 bg-accent">
+        {weatherError && 
+          <Alert onClick={() => dispatch(clearQueryError())} variant="destructive" 
+            // className="w-80 position absolute left-1/2 top-1 transform -translate-x-1/2 bg-accent"
+            className="w-80 animate-in fade-in-0 zoom-in-95 slide-in-from-top-0 duration-500 position absolute left-1/2 top-1 transform -translate-x-1/2 bg-accent"
+            >
             <AlertCircleIcon className="h-4 w-4"/>
             <AlertTitle className="flex justify-between">
               Ошибка
-              <Button className="h-0.5 w-0.5 text-color-red  text-center cursor-pointer">x</Button>
             </AlertTitle>
             <AlertDescription>
               {weatherError}
