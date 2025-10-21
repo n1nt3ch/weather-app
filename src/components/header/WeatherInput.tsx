@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux'
+import { cn } from "@/lib/utils"
 // import { debounce } from 'lodash'
 
 import { setCity, clearCity } from '@/store/slices/weatherSlice/currentCitySlice'
@@ -7,6 +8,7 @@ import { setQueryError, clearQueryError } from "@/store/slices/weatherSlice/curr
 import { useLazyGetCurrentWeatherQuery } from "@/store/weatherApi/weatherApi"
 
 import { Button } from '../ui/button'
+import { buttonAnimation } from "@/lib/animations"
 
 import type { AppDispatch, RootState } from '@/store'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
@@ -17,7 +19,6 @@ const WeatherInput = () => {
   const [queryCity, setQueryCity] = useState<string>('')
 
   const currentTheme = useSelector((state: RootState) => state.theme.selectedTheme)
-  // const currentCity = useSelector((state: RootState) => state.city.selectedCity)
 
   const dispatch = useDispatch<AppDispatch>()
   const [getCurrentQueryWeather] = useLazyGetCurrentWeatherQuery() 
@@ -45,21 +46,6 @@ const WeatherInput = () => {
     }
     return 'Произошла неизвестная ошибка'
   }
-  
-
-  const currentVisibleCity = (cityName: string): string => {
-    if (!cityName.trim()) return ''
-    
-    return cityName
-      .split(/(\s+|-)/)
-      .map((part) => {
-        if (!part || part === ' ' || part === '-') return part
-        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
-      })
-      .join('')
-  }
-
-  const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
 
   const handleSubmit = useCallback(async (e: any) => {
     e.preventDefault()
@@ -79,9 +65,8 @@ const WeatherInput = () => {
   const handleEditCity = () => {
     setQueryCity('')
     setInputCity('')
-    console.log(weatherError)
+    dispatch(clearCity())
   }
-
 
   if (queryCity) {
     return (
@@ -96,39 +81,38 @@ const WeatherInput = () => {
             alt="Location"
           />
           <span className="text-lg font-semibold cursor-pointer" onClick={handleEditCity}>
-            {currentVisibleCity(inputCity)}
+            {queryCity}
           </span>
         </div>
       </div>
     )
   }
   
-  // if (!queryCity) {
-    return (
-      <div className="p-2 flex items-center border rounded mx-8 mr-auto">
-        {/* <h3 className="text-lg font-bold mb-4">Поиск погоды</h3> */}
-        <form onSubmit={handleSubmit} className="">
-          <input
-            type="text"
-            value={inputCity}
-            onChange={(e) => {setInputCity(e.target.value)}}
-            onClick={() => {
-              setInputCity('')
-              dispatch(clearCity())
-              dispatch(clearQueryError())
-            }}
-            placeholder="Введите город..."
-            className="border p-2 mr-2 rounded"
-          />
-          <Button 
-            type="submit"
-            className="p-4 rounded cursor-pointer"
-          >
-            Найти
-          </Button>
-        </form>
-      </div>
-    )
-  }
-// }
+  return (
+    <div className="p-2 flex items-center border rounded mx-8 mr-auto">
+      {/* <h3 className="text-lg font-bold mb-4">Поиск погоды</h3> */}
+      <form onSubmit={handleSubmit} className="">
+        <input
+          type="text"
+          value={inputCity}
+          onChange={(e) => {setInputCity(e.target.value)}}
+          onClick={() => {
+            setInputCity('')
+            dispatch(clearCity())
+            dispatch(clearQueryError())
+          }}
+          placeholder="Введите город..."
+          className="border p-2 mr-2 rounded"
+        />
+        <Button 
+          type="submit"
+          className={cn(buttonAnimation, "p-3 rounded cursor-pointer")}
+          disabled={!inputCity.trim()}
+        >
+          Найти
+        </Button>
+      </form>
+    </div>
+  )
+}
 export default WeatherInput

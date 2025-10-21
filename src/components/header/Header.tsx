@@ -25,6 +25,7 @@ const Header = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
+  const currentCity = useSelector((state: RootState) => state.city.selectedCity)
   
   useEffect(() => {
       if (isDark) {
@@ -32,7 +33,13 @@ const Header = () => {
       } else {
         dispatch(setLightTheme());
       }
-    }, [isDark, dispatch]);
+    }, [isDark, dispatch])
+
+  // useEffect(() => {
+  //   if (currentCity) {
+  //     dispatch(clearQueryError())
+  //   }
+  // }, [currentCity])
   
   return (
     <header className="sticky top-0 border-b z-50 bg-background/95 backdrop-blur py-2 supports-[backdrop-filter]:bg-background/60">
@@ -46,7 +53,8 @@ const Header = () => {
         {weatherError && 
           <Alert onClick={() => dispatch(clearQueryError())} variant="destructive" 
             // className="w-80 position absolute left-1/2 top-1 transform -translate-x-1/2 bg-accent"
-            className="w-80 animate-in fade-in-0 zoom-in-95 slide-in-from-top-0 duration-500 position absolute left-1/2 top-1 transform -translate-x-1/2 bg-accent"
+            className="w-80 animate-in fade-in-0 zoom-in-95 slide-in-from-top-0 duration-500 
+              position absolute left-1/2 top-1 transform -translate-x-1/2 bg-accent cursor-pointer"
             >
             <AlertCircleIcon className="h-4 w-4"/>
             <AlertTitle className="flex justify-between">
