@@ -68,6 +68,12 @@ const WeatherInput = () => {
     dispatch(clearCity())
   }
 
+  useEffect(() => {
+    if (inputCity.length === 0) {
+      dispatch(clearQueryError())
+    }
+  }, [inputCity])
+
   if (queryCity) {
     return (
       <div className="p-2 flex items-center justify-between mx-8 mr-auto">

@@ -25,7 +25,6 @@ const Header = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
-  const currentCity = useSelector((state: RootState) => state.city.selectedCity)
   
   useEffect(() => {
       if (isDark) {
@@ -34,12 +33,6 @@ const Header = () => {
         dispatch(setLightTheme());
       }
     }, [isDark, dispatch])
-
-  // useEffect(() => {
-  //   if (currentCity) {
-  //     dispatch(clearQueryError())
-  //   }
-  // }, [currentCity])
   
   return (
     <header className="sticky top-0 border-b z-50 bg-background/95 backdrop-blur py-2 supports-[backdrop-filter]:bg-background/60">
