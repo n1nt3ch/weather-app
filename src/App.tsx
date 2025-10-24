@@ -6,16 +6,14 @@ import WeatherDashboard from './pages/weather-dashboard'
 import City from './pages/city'
 
 function App() {
-
-
   return (
     <BrowserRouter>
       <ThemeProvider defaultTheme='dark'>
         <Layout>
-          <Routes>
+          {/* <Routes>
             <Route path='/' element={<WeatherDashboard/>}/>
             <Route path='/city/:cityName' element={<City/>}/>
-          </Routes>
+          </Routes> */}
         </Layout>
       </ThemeProvider>
     </BrowserRouter>

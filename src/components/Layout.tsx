@@ -1,22 +1,15 @@
 import type { PropsWithChildren } from 'react'
 import Header from './header/Header'
+import Main from './main/Main'
 import { WeatherDisplay } from './main/WeatherDisplay'
 
-const Layout = ({ children }: PropsWithChildren) => {
+// const Layout = ({ children }: PropsWithChildren) => {
+const Layout = () => {
   return (
     <div className='bg-gradient-to-br from-backgroung-to-muted'>
       <Header/>
-      <main className='min-h-screen container mx-auto px-4 py-8'>
-        {children}
-        <div className="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 py-8">
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl font-bold text-center mb-8">
-              Погодное приложение
-            </h1>
-            <WeatherDisplay/>
-          </div>
-        </div>
-      </main>
+      <Main/>
+        {/* {children} */}
       <footer className='border-t backdrop-blur py-12 
       supports-[backdrop-filter]:bg-background/60'>
         <div className='container mx-auto px-4 text-center text-gray-400'>
