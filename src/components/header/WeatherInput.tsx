@@ -95,9 +95,9 @@ const WeatherInput = () => {
   }
   
   return (
-    <div className="p-2 flex items-center border rounded mx-8 mr-auto">
+    <div className="flex items-center ml-8 mr-auto">
       {/* <h3 className="text-lg font-bold mb-4">Поиск погоды</h3> */}
-      <form onSubmit={handleSubmit} className="">
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           value={inputCity}

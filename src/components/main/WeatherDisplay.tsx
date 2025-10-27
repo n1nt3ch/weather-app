@@ -8,6 +8,38 @@ export const WeatherDisplay = () => {
   const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
   })
 
+  const CurrentDate = () => {
+    const now = new Date();
+    
+    const days = [
+      'Воскресенье',
+      'Понедельник',
+      'Вторник',
+      'Среда',
+      'Четверг',
+      'Пятница',
+      'Суббота'
+    ];
+    
+    const months = [
+      'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+      'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+    ];
+
+    const dayName = days[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getUTCFullYear()
+
+    return <div>{dayName} | {day} {month} {year}</div>;
+  };
+
+  const capitalizeFirstLetter = (str: string):string  => {
+    const [firstWord, ...anyWords] = str.split(' ');
+    const newWord = firstWord.split('')
+    return `${newWord[0].toUpperCase()}${newWord.join('').slice(1)} ${anyWords}`
+  }
+ 
   return (
     <>
       {isLoading && <div>Загрузка погоды...</div>}
@@ -15,13 +47,22 @@ export const WeatherDisplay = () => {
       {weather && (
         <div className="bg-blue-50 p-4 rounded">
           <div className="flex justify-between">
-              <div className="flex flex-col">
-                <h1 className="capitalize text-5xl">{weather.weather[0].description}</h1>
-                <div>
+              <div className="flex-col">
+                <h1 className="text-5xl mb-16">{capitalizeFirstLetter(weather.weather[0].description)}</h1>
+                <div className="flex flex-col content-between">
                   <span className="text-6xl">
                     {Math.round(weather.main.temp)}°C
                   </span>
+                  <span className="text-2xl">
+                    {CurrentDate()}
+                  </span>
                 </div>
+              </div>
+              <div className="flex items-center">
+                <img
+                  src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+                  alt={weather.weather[0].description}
+                />
               </div>
             </div>
           <h4 className="font-bold text-xl">
