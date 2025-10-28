@@ -1,7 +1,6 @@
-import type { PropsWithChildren } from 'react'
+// import type { PropsWithChildren } from 'react'
 import Header from './header/Header'
 import Main from './main/Main'
-import { WeatherDisplay } from './main/WeatherDisplay'
 
 // const Layout = ({ children }: PropsWithChildren) => {
 const Layout = () => {

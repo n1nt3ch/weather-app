@@ -9,7 +9,6 @@ import {
   AlertTitle,
 } from "../ui/alert"
 import { AlertCircleIcon } from "lucide-react"
-import { Button } from '../ui/button'
 
 import type { AppDispatch } from '@/store'
 import type { RootState } from "@/store"

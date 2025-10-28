@@ -22,8 +22,8 @@ export const WeatherDisplay = () => {
     ];
     
     const months = [
-      'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-      'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+      '01', '02', '03', '04', '05', '06',
+      '07', '08', '09', '10', '11', '12'
     ];
 
     const dayName = days[now.getDay()];
@@ -31,24 +31,45 @@ export const WeatherDisplay = () => {
     const month = months[now.getMonth()];
     const year = now.getUTCFullYear()
 
-    return <div>{dayName} | {day} {month} {year}</div>;
+    return <div>{dayName} | {day}.{month}.{year}</div>;
   };
 
-  const capitalizeFirstLetter = (str: string):string  => {
+  const capitalizeFirstLetterInFirstWord = (str: string):string  => {
     const [firstWord, ...anyWords] = str.split(' ');
     const newWord = firstWord.split('')
     return `${newWord[0].toUpperCase()}${newWord.join('').slice(1)} ${anyWords}`
   }
+
+  // const currentWeatherIcon = (weatherType) => {
+  //   switch (weatherType) {
+  //     case 'Thunderstorm':
+  //       return '';
+  //     case 'Drizzle':
+  //       return '';
+  //     case 'Rain':
+  //       return '';
+  //     case 'Snow':
+  //       return '';
+  //     case 'Atmosphere':
+  //       return '';
+  //     case 'Clear':
+  //       return '';
+  //     case 'Clouds':
+  //       return '';
+  //     default: 
+  //       return;
+  //   }
+  // }
  
   return (
     <>
       {isLoading && <div>Загрузка погоды...</div>}
 
       {weather && (
-        <div className="bg-blue-50 p-4 rounded">
+        <div className="py-8 rounded">
           <div className="flex justify-between">
               <div className="flex-col">
-                <h1 className="text-5xl mb-16">{capitalizeFirstLetter(weather.weather[0].description)}</h1>
+                <h1 className="text-5xl mb-24">{capitalizeFirstLetterInFirstWord(weather.weather[0].description)}</h1>
                 <div className="flex flex-col content-between">
                   <span className="text-6xl">
                     {Math.round(weather.main.temp)}°C
@@ -63,9 +84,10 @@ export const WeatherDisplay = () => {
                   src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
                   alt={weather.weather[0].description}
                 />
+                <p>{weather.weather[0].main}</p>
               </div>
             </div>
-          <h4 className="font-bold text-xl">
+          {/* <h4 className="font-bold text-xl">
             {weather.name}, {weather.sys.country}
           </h4>
           <div className="flex items-center mt-2">
@@ -83,7 +105,7 @@ export const WeatherDisplay = () => {
             <div>Влажность: {weather.main.humidity}%</div>
             <div>Ветер: {weather.wind.speed} м/с</div>
             <div>Давление: {Math.round(weather.main.pressure * 0.75)} мм.рт.ст</div>
-          </div>
+          </div> */}
         </div>
       )}
     </>

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, type FormEvent } from "react"
 import { useDispatch, useSelector } from 'react-redux'
 import { cn } from "@/lib/utils"
 // import { debounce } from 'lodash'
@@ -47,7 +47,7 @@ const WeatherInput = () => {
     return 'Произошла неизвестная ошибка'
   }
 
-  const handleSubmit = useCallback(async (e: any) => {
+  const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault()
     if (inputCity.trim()) {
       const result = await getCurrentQueryWeather(inputCity)
@@ -77,16 +77,16 @@ const WeatherInput = () => {
   if (queryCity) {
     return (
       <div className="p-2 flex items-center justify-between mx-8 mr-auto">
-        <div className="flex items-center">
+        <div className="flex">
           <img 
-            className='w-6 h-6'
+            className='w-7 h-7'
             src={currentTheme === 'dark'
              ? 
              'src/context/icons/location-pointer-white.svg' 
              : 'src/context/icons/location-pointer-black.svg'} 
             alt="Location"
           />
-          <span className="text-lg font-semibold cursor-pointer" onClick={handleEditCity}>
+          <span className="text-2xl font-semibold cursor-pointer" onClick={handleEditCity}>
             {queryCity}
           </span>
         </div>
