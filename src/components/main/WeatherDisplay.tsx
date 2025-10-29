@@ -87,6 +87,7 @@ export const WeatherDisplay = () => {
                 <p>{weather.weather[0].main}</p>
               </div>
             </div>
+            
           {/* <h4 className="font-bold text-xl">
             {weather.name}, {weather.sys.country}
           </h4>
