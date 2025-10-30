@@ -54,6 +54,7 @@ const WeatherInput = () => {
       if (result.data) {
         setQueryCity(result.data.name)
         dispatch(setCity(result.data.name))
+        console.log(result.data.coord)
       }
       if (result.error) {
         const errorMsg = getErrorMessage(result.error)

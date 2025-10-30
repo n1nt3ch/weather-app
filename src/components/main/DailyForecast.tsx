@@ -1,6 +1,6 @@
 // components/HourlyForecast.tsx
 import React from 'react';
-import { useGetHourlyForecastQuery } from '@/store/weatherApi/weatherApi';
+import { useGetHo } from '@/store/weatherApi/weatherApi';
 import { format, fromUnixTime } from 'date-fns';
 import { ru } from 'date-fns/locale';
 

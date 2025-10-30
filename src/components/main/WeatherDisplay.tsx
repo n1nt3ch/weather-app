@@ -37,7 +37,7 @@ export const WeatherDisplay = () => {
   const capitalizeFirstLetterInFirstWord = (str: string):string  => {
     const [firstWord, ...anyWords] = str.split(' ');
     const newWord = firstWord.split('')
-    return `${newWord[0].toUpperCase()}${newWord.join('').slice(1)} ${anyWords}`
+    return `${newWord[0].toUpperCase()}${newWord.join('').slice(1)} ${anyWords.join(' ')}`
   }
 
   // const currentWeatherIcon = (weatherType) => {
