@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 import { setCity, clearCity } from '@/store/slices/weatherSlice/currentCitySlice'
 import { setQueryError, clearQueryError } from "@/store/slices/weatherSlice/currentQueryError"
-import { useLazyGetCurrentWeatherQuery } from "@/store/weatherApi/weatherApi"
+import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 
 import { Button } from '../ui/button'
 import { buttonAnimation } from "@/lib/animations"

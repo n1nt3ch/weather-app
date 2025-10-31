@@ -1,6 +1,5 @@
-// components/HourlyForecast.tsx
 import React from 'react';
-import { useGetHo } from '@/store/weatherApi/weatherApi';
+import { useGetHourlyForecastQuery } from '@/store/api/forecastApi/forecastApi';
 import { format, fromUnixTime } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
@@ -14,7 +13,7 @@ export const HourlyForecast: React.FC<HourlyForecastProps> = ({ lat, lon, cityNa
   const { data: hourlyData, isLoading, error } = useGetHourlyForecastQuery({ lat, lon });
 
   if (isLoading) return <div className="forecast-loading">Загрузка прогноза...</div>;
-  if (error) return <div className="forecast-error">Ошибка загрузки прогноза</div>;
+  if (error) return <div className="forecast-error">Ошибка загрузки прогноза {}</div>;
   if (!hourlyData) return null;
 
   return (

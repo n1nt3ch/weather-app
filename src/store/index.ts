@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { weatherApi } from './weatherApi/weatherApi'
-import { forecastApi } from './forecastApi/forecastApi'
+import { weatherApi } from './api/weatherApi/weatherApi'
+import { forecastApi } from './api/forecastApi/forecastApi'
 import currentCitySlice from './slices/weatherSlice/currentCitySlice'
 import currentQueryError from './slices/weatherSlice/currentQueryError'
 import currentThemeSlice from './slices/themeSlice/themeSlice'
@@ -15,7 +15,8 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
-      .concat(weatherApi.middleware, forecastApi.middleware)
+      .concat(weatherApi.middleware)
+      .concat(forecastApi.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>

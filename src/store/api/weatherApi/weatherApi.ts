@@ -9,7 +9,7 @@ export const weatherApi = createApi({
   baseQuery: fetchBaseQuery({ 
     baseUrl: BASE_URL,
   }),
-  tagTypes: ['Weather', 'Geocode', 'Forecast'],
+  tagTypes: ['Weather'],
   endpoints: (builder) => ({
     getCurrentWeather: builder.query<WeatherData, string>({
       query: (city) => 

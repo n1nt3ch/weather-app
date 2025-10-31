@@ -1,4 +1,5 @@
-import { useGetCurrentWeatherQuery } from "@/store/weatherApi/weatherApi"
+import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
+import { HourlyForecast } from "./DailyForecast"
 import { useSelector } from "react-redux"
 
 import type { RootState } from "@/store"
@@ -87,6 +88,7 @@ export const WeatherDisplay = () => {
                 <p>{weather.weather[0].main}</p>
               </div>
             </div>
+            <HourlyForecast lat={weather.coord.lat} lon={weather.coord.lon} cityName={currentCity}/>
             
           {/* <h4 className="font-bold text-xl">
             {weather.name}, {weather.sys.country}

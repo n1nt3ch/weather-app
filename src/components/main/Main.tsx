@@ -1,5 +1,4 @@
-import { WeatherDisplay } from "./WeatherDisplay";
-
+import { WeatherDisplay } from "./WeatherDisplay"
 const Main = () => {
   return (
     <div className='min-h-screen container mx-auto'>
