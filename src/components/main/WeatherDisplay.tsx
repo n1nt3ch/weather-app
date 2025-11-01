@@ -1,13 +1,14 @@
 import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
-import { HourlyForecast } from "./DailyForecast"
+import { useState } from "react"
 import { useSelector } from "react-redux"
-
+import { Hourly5DayForecast } from "./5DayForecast"
 import type { RootState } from "@/store"
 
 export const WeatherDisplay = () => {
   const currentCity = useSelector((state: RootState) => state.city.selectedCity)
   const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
   })
+  const [daysCount, setDaysCount] = useState<number>(7);
 
   const CurrentDate = () => {
     const now = new Date();
@@ -88,7 +89,27 @@ export const WeatherDisplay = () => {
                 <p>{weather.weather[0].main}</p>
               </div>
             </div>
-            <HourlyForecast lat={weather.coord.lat} lon={weather.coord.lon} cityName={currentCity}/>
+            <div className="weather-dashboard">
+              <div className="controls">
+                <label>
+                  Количество дней для прогноза (1-16):
+                  <input
+                    type="number"
+                    min="1"
+                    max="16"
+                    value={daysCount}
+                    onChange={(e) => setDaysCount(Number(e.target.value))}
+                  />
+                </label>
+              </div>
+
+              {/* Почасовой прогноз на 4 дня */}
+              <Hourly5DayForecast
+                lat={weather.coord.lat}
+                lon={weather.coord.lon}
+                cityName={currentCity}
+              />
+            </div>
             
           {/* <h4 className="font-bold text-xl">
             {weather.name}, {weather.sys.country}

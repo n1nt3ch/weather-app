@@ -1,57 +1,33 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { HourlyForecast, WeatherForecastResponse, DailyForecast } from './types';
 
 const API_KEY = import.meta.env.VITE_FORECASTWEATHER_API_KEY
-const BASE_URL = 'https://api.openweathermap.org/data/3.0/' 
-// https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
-
-
 export const forecastApi = createApi({
   reducerPath: 'forecastApi',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: BASE_URL,
+    baseUrl: 'https://api.openweathermap.org/data/2.5/',
   }),
   tagTypes: ['Forecast'],
   endpoints: (builder) => ({
-    getHourlyForecast: builder.query<HourlyForecast[], { lat: number; lon: number }>({
+    // 5-Day / 3-Hour Forecast (БЕСПЛАТНЫЙ)
+    get5DayForecast: builder.query<any[], { lat: number; lon: number }>({
       query: ({ lat, lon }) => {
-        if (!process.env.REACT_APP_OPENWEATHER_API_KEY) {
-          throw new Error('API key missing');
-        }
-        return `/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily,alerts&units=metric&appid=${API_KEY}`;
+        if (!API_KEY) throw new Error('API key missing');
+        return `forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}&lang=ru`;
       },
-      transformResponse: (response: WeatherForecastResponse) => response.hourly.slice(0, 24), // Берем только 24 часа
-      providesTags: ['Forecast'],
+      transformResponse: (response: any) => response.list || [],
     }),
 
-    // Полный прогноз (почасовой + ежедневный)
-    getFullForecast: builder.query<WeatherForecastResponse, { lat: number; lon: number }>({
+    // One Call API 3.0 (частично бесплатный - требует активации)
+    getOneCallForecast: builder.query<any, { lat: number; lon: number }>({
       query: ({ lat, lon }) => {
-        if (!process.env.REACT_APP_OPENWEATHER_API_KEY) {
-          throw new Error('API key missing');
-        }
-        return `/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${API_KEY}`;
+        if (!API_KEY) throw new Error('API key missing');
+        return `onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${API_KEY}&lang=ru`;
       },
-      providesTags: ['Forecast'],
-    }),
-
-    // Ежедневный прогноз на 7 дней
-    getDailyForecast: builder.query<DailyForecast[], { lat: number; lon: number }>({
-      query: ({ lat, lon }) => {
-        if (!process.env.REACT_APP_OPENWEATHER_API_KEY) {
-          throw new Error('API key missing');
-        }
-        return `/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=metric&appid=${API_KEY}`;
-      },
-      transformResponse: (response: WeatherForecastResponse) => response.daily,
-      providesTags: ['Forecast'],
     }),
   })
 })
 
 export const { 
-  useGetHourlyForecastQuery,
-  useGetFullForecastQuery,
-  useGetDailyForecastQuery,
-  // useGetWeatherByCoordsQuery 
+  useGet5DayForecastQuery,
+  useGetOneCallForecastQuery,
 } = forecastApi
