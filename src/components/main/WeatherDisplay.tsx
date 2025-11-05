@@ -89,27 +89,11 @@ export const WeatherDisplay = () => {
                 <p>{weather.weather[0].main}</p>
               </div>
             </div>
-            <div className="weather-dashboard">
-              <div className="controls">
-                <label>
-                  Количество дней для прогноза (1-16):
-                  <input
-                    type="number"
-                    min="1"
-                    max="16"
-                    value={daysCount}
-                    onChange={(e) => setDaysCount(Number(e.target.value))}
-                  />
-                </label>
-              </div>
-
-              {/* Почасовой прогноз на 4 дня */}
-              <Hourly5DayForecast
-                lat={weather.coord.lat}
-                lon={weather.coord.lon}
-                cityName={currentCity}
-              />
-            </div>
+            <Hourly5DayForecast
+              lat={weather.coord.lat}
+              lon={weather.coord.lon}
+              cityName={currentCity}
+            />
             
           {/* <h4 className="font-bold text-xl">
             {weather.name}, {weather.sys.country}

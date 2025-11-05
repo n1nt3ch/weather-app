@@ -123,3 +123,244 @@ body {
   font-family: 'Inter', sans-serif;
   font-size: medium;
 }
+/* components/Hourly5DayForecast.css */
+.hourly-5day-forecast {
+  max-width: 100%;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hourly-5day-forecast h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.api-info {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #718096;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.day-section {
+  margin-bottom: 2rem;
+}
+
+.day-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  text-transform: capitalize;
+}
+
+.hourly-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.hourly-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.hourly-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 1);
+}
+
+.hour-time {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.weather-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0.5rem auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.hour-temp {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2b6cb0;
+  margin: 0.5rem 0;
+}
+
+.hour-details {
+  display: flex;
+  justify-content: space-around;
+  margin: 0.8rem 0;
+  font-size: 0.8rem;
+}
+
+.hour-pop {
+  color: #4299e1;
+  font-weight: 500;
+}
+
+.hour-wind {
+  color: #38a169;
+  font-weight: 500;
+}
+
+.hour-desc {
+  font-size: 0.8rem;
+  color: #718096;
+  text-transform: capitalize;
+  margin-top: 0.5rem;
+}
+
+/* Состояния загрузки и ошибок */
+.forecast-loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #4a5568;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  margin: 1rem 0;
+}
+
+.forecast-error {
+  background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+  border: 1px solid #fc8181;
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #c53030;
+}
+
+.forecast-error h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #c53030;
+}
+
+.forecast-error p {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .hourly-5day-forecast {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .hourly-5day-forecast h3 {
+    font-size: 1.2rem;
+  }
+
+  .hourly-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .hourly-card {
+    padding: 0.8rem;
+  }
+
+  .hour-temp {
+    font-size: 1.3rem;
+  }
+
+  .weather-icon {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hourly-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hour-details {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .hourly-5day-forecast {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    color: #e2e8f0;
+  }
+
+  .hourly-5day-forecast h3 {
+    color: #e2e8f0;
+  }
+
+  .hourly-card {
+    background: rgba(45, 55, 72, 0.9);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .hour-time {
+    color: #e2e8f0;
+  }
+
+  .hour-temp {
+    color: #63b3ed;
+  }
+
+  .api-info {
+    color: #a0aec0;
+  }
+
+  .day-title {
+    color: #cbd5e0;
+    border-bottom-color: #4a5568;
+  }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hourly-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.hourly-card:nth-child(odd) {
+  animation-delay: 0.1s;
+}
+
+.hourly-card:nth-child(even) {
+  animation-delay: 0.2s;
+}
