@@ -1,6 +1,7 @@
 // components/Hourly5DayForecast.tsx (на основе 5-Day Forecast)
 import React from 'react';
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
+import { getWindDirection, getWindDirectionArrow, capitalize } from '@/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
@@ -60,9 +61,9 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
 
   return (
     <div className="hourly-5day-forecast">
-      <h3>Прогноз на 5 дней для {cityName} (интервал 3 часа)</h3>
+      <h3>Прогноз на 5 дней</h3>
       
-      {Object.entries(groupedData).slice(1, 2).map(([dateKey, dayData]) => (
+      {Object.entries(groupedData).slice(0).map(([dateKey, dayData]) => (
         <div key={dateKey} className="day-section">
           <h4 className="day-title">{dayData[0].dayName}</h4>
           <div className="hourly-grid">
@@ -76,10 +77,10 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                 />
                 <div className="hour-temp">{Math.round(hour.main.temp)}°C</div>
                 <div className="hour-details">
-                  <div className="hour-pop">💧 {Math.round((hour.pop || 0) * 100)}%</div>
-                  <div className="hour-wind">💨 {Math.round(hour.wind.speed)} м/с</div>
+                  <div className="hour-pop">💧 {Math.round((hour.main.humidity))}%</div>
+                  <div className="hour-wind">💨 {Math.round(hour.wind.speed)} м/с, {getWindDirectionArrow(hour.wind.deg)}{getWindDirection(hour.wind.deg)}</div>
                 </div>
-                <div className="hour-desc">{hour.weather[0].description}</div>
+                {/* <div className="hour-desc">{(hour.weather[0].description).toLowerCase()}</div> */}
               </div>
             ))}
           </div>

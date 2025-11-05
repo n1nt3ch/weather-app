@@ -1,14 +1,17 @@
 import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
+import { capitalize, getCityTime } from "@/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
+
 import type { RootState } from "@/store"
 
 export const WeatherDisplay = () => {
+  const [localTime, setLocalTime] = useState('');
   const currentCity = useSelector((state: RootState) => state.city.selectedCity)
   const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
   })
-  const [daysCount, setDaysCount] = useState<number>(7);
+  // const [daysCount, setDaysCount] = useState<number>(7);
 
   const CurrentDate = () => {
     const now = new Date();
@@ -33,14 +36,8 @@ export const WeatherDisplay = () => {
     const month = months[now.getMonth()];
     const year = now.getUTCFullYear()
 
-    return <div>{dayName} | {day}.{month}.{year}</div>;
+    return <>{dayName}, {day}.{month}.{year}</>;
   };
-
-  const capitalizeFirstLetterInFirstWord = (str: string):string  => {
-    const [firstWord, ...anyWords] = str.split(' ');
-    const newWord = firstWord.split('')
-    return `${newWord[0].toUpperCase()}${newWord.join('').slice(1)} ${anyWords.join(' ')}`
-  }
 
   // const currentWeatherIcon = (weatherType) => {
   //   switch (weatherType) {
@@ -62,6 +59,19 @@ export const WeatherDisplay = () => {
   //       return;
   //   }
   // }
+
+  useEffect(() => {
+    if (!weather) return;
+    
+    const updateTime = () => {
+      const time = getCityTime(weather.timezone);
+      setLocalTime(time.toLocaleTimeString('ru-RU'));
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, [weather]);
  
   return (
     <>
@@ -71,13 +81,13 @@ export const WeatherDisplay = () => {
         <div className="py-8 rounded">
           <div className="flex justify-between">
               <div className="flex-col">
-                <h1 className="text-5xl mb-24">{capitalizeFirstLetterInFirstWord(weather.weather[0].description)}</h1>
+                <h1 className="text-5xl mb-24">{capitalize(weather.weather[0].description)}</h1>
                 <div className="flex flex-col content-between">
                   <span className="text-6xl">
                     {Math.round(weather.main.temp)}°C
                   </span>
                   <span className="text-2xl">
-                    {CurrentDate()}
+                    {CurrentDate()}, {localTime}
                   </span>
                 </div>
               </div>

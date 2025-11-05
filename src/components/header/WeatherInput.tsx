@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, type FormEvent } from "react"
 import { useDispatch, useSelector } from 'react-redux'
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 // import { debounce } from 'lodash'
 
 import { setCity, clearCity } from '@/store/slices/weatherSlice/currentCitySlice'
