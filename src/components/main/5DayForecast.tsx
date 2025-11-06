@@ -1,10 +1,11 @@
 // components/Hourly5DayForecast.tsx (на основе 5-Day Forecast)
 import React from 'react';
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
-import { getWindDirection, getWindDirectionArrow, capitalize } from '@/utils/otherFunc';
+import { getWindDirection, getWindDirectionArrow } from '@/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
+import { Wind } from "lucide-react"
 
 interface Hourly5DayForecastProps {
   lat: number;
@@ -12,7 +13,7 @@ interface Hourly5DayForecastProps {
   cityName: string;
 }
 
-export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon, cityName }) => {
+export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon }) => {
   const { data: forecastData, isLoading, error } = useGet5DayForecastQuery({ lat, lon });
 
   const getDayName = (date: Date): string => {
@@ -78,7 +79,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                 <div className="hour-temp">{Math.round(hour.main.temp)}°C</div>
                 <div className="hour-details">
                   <div className="hour-pop">💧 {Math.round((hour.main.humidity))}%</div>
-                  <div className="hour-wind">💨 {Math.round(hour.wind.speed)} м/с, {getWindDirectionArrow(hour.wind.deg)}{getWindDirection(hour.wind.deg)}</div>
+                  <div className="hour-wind"><Wind /> {Math.round(hour.wind.speed)} м/с, {getWindDirectionArrow(hour.wind.deg)}{getWindDirection(hour.wind.deg)}</div>
                 </div>
                 {/* <div className="hour-desc">{(hour.weather[0].description).toLowerCase()}</div> */}
               </div>
