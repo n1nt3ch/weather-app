@@ -59,6 +59,54 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   if (!forecastData) return null;
 
   const groupedData = groupByDay(forecastData);
+  
+  const groupByDay = (list) => {
+    const days = {};
+
+    list.forEach(item => {
+      const date = new Date(item.dt * 1000).toLocaleDateString();
+      if (!days[date]) {
+      days[date] = {
+      temps: [],
+      descriptions: {},
+      icons: {},
+      timestamps: []
+      };
+      }
+
+      days[date].temps.push(item.main.temp);
+      days[date].timestamps.push(item.dt);
+
+      // Считаем частоту описаний и иконок
+      const desc = item.weather[0].description;
+      const icon = item.weather[0].icon;
+      days[date].descriptions[desc] = (days[date].descriptions[desc] || 0) + 1;
+      days[date].icons[icon] = (days[date].icons[icon] || 0) + 1;
+    });
+
+    // Расчет значений для каждого дня
+    return Object.keys(days).map(date => {
+      const dayData = days[date];
+
+      // Находим наиболее частые описание и иконку
+      const mostFrequentDesc = Object.keys(dayData.descriptions)
+      .reduce((a, b) => dayData.descriptions[a] > dayData.descriptions[b] ? a : b);
+
+      const mostFrequentIcon = Object.keys(dayData.icons)
+      .reduce((a, b) => dayData.icons[a] > dayData.icons[b] ? a : b);
+
+      return {
+        date,
+        temp: Math.round(dayData.temps.reduce((a, b) => a + b) / dayData.temps.length),
+        temp_min: Math.round(Math.min(...dayData.temps)),
+        temp_max: Math.round(Math.max(...dayData.temps)),
+        description: mostFrequentDesc,
+        icon: mostFrequentIcon,
+        timestamp: dayData.timestamps[0] // первая временная метка дня
+      };
+    });
+  };
+
 
   return (
     <div className="hourly-5day-forecast flex justify-between">
