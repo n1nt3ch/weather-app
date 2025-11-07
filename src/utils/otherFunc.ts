@@ -21,3 +21,35 @@ export const getCityTime = (timezoneOffset: number): Date => {
   const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
   return new Date(utc + (timezoneOffset * 1000));
 };
+
+export const CurrentDate = () => {
+  const now = new Date();
+  
+  const days = [
+    'Воскресенье',
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота'
+  ];
+  
+  const months = [
+    '01', '02', '03', '04', '05', '06',
+    '07', '08', '09', '10', '11', '12'
+  ];
+
+  const dayName = days[now.getDay()];
+  const day = now.getDate();
+  const month = months[now.getMonth()];
+  const year = now.getUTCFullYear()
+
+  // return <>{dayName}, {day}.{month}.{year}</>;
+  return {
+    dayName,
+    day,
+    month,
+    year
+  }
+};

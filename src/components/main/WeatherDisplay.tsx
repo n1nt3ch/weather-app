@@ -1,7 +1,7 @@
 import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { capitalize, getCityTime } from "@/utils/otherFunc"
+import { capitalize, getCityTime, CurrentDate } from "@/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
 
 import type { RootState } from "@/store"
@@ -13,32 +13,7 @@ export const WeatherDisplay = () => {
   })
   // const [daysCount, setDaysCount] = useState<number>(7);
 
-  const CurrentDate = () => {
-    const now = new Date();
-    
-    const days = [
-      'Воскресенье',
-      'Понедельник',
-      'Вторник',
-      'Среда',
-      'Четверг',
-      'Пятница',
-      'Суббота'
-    ];
-    
-    const months = [
-      '01', '02', '03', '04', '05', '06',
-      '07', '08', '09', '10', '11', '12'
-    ];
-
-    const dayName = days[now.getDay()];
-    const day = now.getDate();
-    const month = months[now.getMonth()];
-    const year = now.getUTCFullYear()
-
-    return <>{dayName}, {day}.{month}.{year}</>;
-  };
-
+  
   // const currentWeatherIcon = (weatherType) => {
   //   switch (weatherType) {
   //     case 'Thunderstorm':
@@ -87,7 +62,7 @@ export const WeatherDisplay = () => {
                     {Math.round(weather.main.temp)}°C
                   </span>
                   <span className="text-2xl">
-                    {CurrentDate()}, {localTime}
+                    {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, ${localTime}`}
                   </span>
                 </div>
               </div>

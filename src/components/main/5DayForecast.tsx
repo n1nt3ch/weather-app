@@ -5,7 +5,7 @@ import { getWindDirection, getWindDirectionArrow } from '@/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
-import { Wind } from "lucide-react"
+import { Wind, Droplet } from "lucide-react"
 
 interface Hourly5DayForecastProps {
   lat: number;
@@ -61,13 +61,14 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   const groupedData = groupByDay(forecastData);
 
   return (
-    <div className="hourly-5day-forecast">
-      <h3>Прогноз на 5 дней</h3>
+    <div className="hourly-5day-forecast flex justify-between">
+      {/* <h3>Прогноз на 5 дней</h3> */}
+      {console.log(groupedData)}
       
-      {Object.entries(groupedData).slice(0).map(([dateKey, dayData]) => (
+      {Object.entries(groupedData).map(([dateKey, dayData]) => (
         <div key={dateKey} className="day-section">
           <h4 className="day-title">{dayData[0].dayName}</h4>
-          <div className="hourly-grid">
+          <div className="flex-col">
             {dayData.map((hour) => (
               <div key={hour.dt} className="hourly-card">
                 <div className="hour-time">{hour.time}</div>
@@ -78,7 +79,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                 />
                 <div className="hour-temp">{Math.round(hour.main.temp)}°C</div>
                 <div className="hour-details">
-                  <div className="hour-pop">💧 {Math.round((hour.main.humidity))}%</div>
+                  <div className="hour-pop"><Droplet /> {Math.round((hour.main.humidity))}%</div>
                   <div className="hour-wind"><Wind /> {Math.round(hour.wind.speed)} м/с, {getWindDirectionArrow(hour.wind.deg)}{getWindDirection(hour.wind.deg)}</div>
                 </div>
                 {/* <div className="hour-desc">{(hour.weather[0].description).toLowerCase()}</div> */}
