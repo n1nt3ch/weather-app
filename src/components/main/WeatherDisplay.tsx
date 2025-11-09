@@ -62,7 +62,9 @@ export const WeatherDisplay = () => {
                     {Math.round(weather.main.temp)}°C
                   </span>
                   <span className="text-2xl">
-                    {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, ${localTime}`}
+                    {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, 
+                     ${localTime}
+                    `}
                   </span>
                 </div>
               </div>
