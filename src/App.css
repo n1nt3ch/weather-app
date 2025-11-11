@@ -124,116 +124,6 @@ body {
   font-size: medium;
 }
 
-/* .hourly-5day-forecast {
-  max-width: 100%;
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.hourly-5day-forecast h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-  text-align: left;
-}
-
-.api-info {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #718096;
-  margin-bottom: 1.5rem;
-  font-style: italic;
-}
-
-.day-section {
-  margin-bottom: 2rem;
-}
-
-.day-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #4a5568;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e2e8f0;
-  text-transform: capitalize;
-}
-
-.hourly-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.hourly-card {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-}
-
-.hourly-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 1);
-}
-
-.hour-time {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-}
-
-.weather-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0.5rem auto;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.hour-temp {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2b6cb0;
-  margin: 0.5rem 0;
-}
-
-.hour-details {
-  display: flex;
-  justify-content: space-around;
-  margin: 0.8rem 0;
-  font-size: 0.8rem;
-}
-
-.hour-pop {
-  color: #4299e1;
-  font-weight: 500;
-}
-
-.hour-wind {
-  color: #38a169;
-  font-weight: 500;
-}
-
-.hour-desc {
-  font-size: 0.8rem;
-  color: #718096;
-  text-transform: capitalize;
-  margin-top: 0.5rem;
-}
-
 /* Состояния загрузки и ошибок */
 .forecast-loading {
   text-align: center;
@@ -374,7 +264,7 @@ body {
 
 .day-section {
   border-radius: 12px;
-  max-width: 33%;
+  max-width: 15rem;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }

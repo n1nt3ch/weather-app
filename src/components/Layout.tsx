@@ -1,7 +1,6 @@
 // import type { PropsWithChildren } from 'react'
 import Header from './header/Header'
 import Main from './main/Main'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 // const Layout = ({ children }: PropsWithChildren) => {
 const Layout = () => {

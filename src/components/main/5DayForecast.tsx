@@ -1,11 +1,11 @@
 // components/Hourly5DayForecast.tsx (на основе 5-Day Forecast)
 import React from 'react';
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
-import { getWindDirection, getWindDirectionArrow } from '@/utils/otherFunc';
+import { getWindDirection, capitalize } from '@/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
-import { Wind, Droplet, Thermometer, Gauge, Eye } from "lucide-react"
+import { Wind, Droplet, CloudDrizzle, Gauge, Eye } from "lucide-react"
 import {
   Carousel,
   CarouselContent,
@@ -21,7 +21,8 @@ interface Hourly5DayForecastProps {
 }
 
 interface DailyAverage {
-  temp: number;
+  tempMin: number;
+  tempMax: number;
   feels_like: number;
   pressure: number;
   humidity: number;
@@ -29,6 +30,7 @@ interface DailyAverage {
   wind_deg: number;
   pop: number;
   visibility: number;
+  precipitation: number
   description: string;
   icon: string;
 }
@@ -39,11 +41,12 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   const getDayName = (date: Date): string => {
     if (isToday(date)) return 'Сегодня';
     if (isTomorrow(date)) return 'Завтра';
-    return format(date, 'EEEE', { locale: ru });
+    return format(date, 'EEEEEE, ii.LL', { locale: ru });
   };
 
   const calculateDailyAverage = (dayData: any[]): DailyAverage => {
-    const temps = dayData.map(hour => hour.main.temp);
+    const tempsMin = dayData.map(hour => hour.main.temp_min);
+    const tempsMax = dayData.map(hour => hour.main.temp_max);
     const feels_like = dayData.map(hour => hour.main.feels_like);
     const pressures = dayData.map(hour => hour.main.pressure);
     const humidities = dayData.map(hour => hour.main.humidity);
@@ -51,7 +54,12 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     const wind_degs = dayData.map(hour => hour.wind.deg);
     const pops = dayData.map(hour => hour.pop * 100); // Convert to percentage
     const visibilities = dayData.map(hour => hour.visibility);
-
+    const precipitations = dayData.map((hour) => {
+      const rain = hour.rain && hour.rain['3h'] ? hour.rain['3h'] : 0;
+      const snow = hour.snow && hour.snow['3h'] ? hour.snow['3h'] : 0;
+      return rain + snow;  // Сумма дождя и снега в мм за 3 часа
+    });
+    
     // Находим наиболее часто встречающееся описание погоды
     const weatherCounts: { [key: string]: number } = {};
     dayData.forEach(hour => {
@@ -68,8 +76,11 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       hour.weather[0].description === mostFrequentWeather
     );
 
+    // console.log(dayData.find(hour => hour.main.temp_min))
+
     return {
-      temp: Math.round(temps.reduce((a, b) => a + b) / temps.length),
+      tempMin: Math.round(tempsMin.reduce((a, b) => a + b) / tempsMin.length),
+      tempMax: Math.round(tempsMax.reduce((a, b) => a + b) / tempsMax.length),
       feels_like: Math.round(feels_like.reduce((a, b) => a + b) / feels_like.length),
       pressure: Math.round(pressures.reduce((a, b) => a + b) / pressures.length),
       humidity: Math.round(humidities.reduce((a, b) => a + b) / humidities.length),
@@ -77,6 +88,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       wind_deg: Math.round(wind_degs.reduce((a, b) => a + b) / wind_degs.length),
       pop: Math.round(pops.reduce((a, b) => a + b) / pops.length),
       visibility: Math.round(visibilities.reduce((a, b) => a + b) / visibilities.length / 1000), // Convert to km
+      precipitation: Math.round(precipitations.reduce((a, b) => a + b) * 10) / 10,
       description: mostFrequentWeather,
       icon: mostFrequentHour?.weather[0].icon || dayData[0].weather[0].icon
     };
@@ -130,46 +142,53 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
 
   return (
     // <div className="hourly-5day-forecast p-4 rounded-2xl flex-wrap">
-    <Carousel className='m-auto w-full max-w-2xl'>
-      <CarouselContent className='pl-4'>
+    <Carousel className='w-full mt-8 px-6 py-2 border rounded-2xl'>
+      <CarouselContent className='pl-4 w-full gap-2'>
       {Object.entries(groupedData).map(([dateKey, dayData]) => (
         <CarouselItem key={dateKey} className="day-section bg-blue-300">
           <h4 className="day-title">{dayData.dayName}</h4>
           
           {/* Средние показатели за сутки */}
           <div className="daily-average-card">
-            <div className="daily-average-header">
+            <div className="daily-average-header flex-col">
               <img 
                 src={`https://openweathermap.org/img/wn/${dayData.average.icon}@2x.png`} 
                 alt={dayData.average.description}
                 className="weather-icon-large"
               />
               <div className="daily-average-temp">
-                <div className="temp-main">{dayData.average.temp}°C</div>
-                <div className="temp-feels">Ощущается как {dayData.average.feels_like}°C</div>
-                <div className="weather-desc">{dayData.average.description}</div>
+                <div className='flex justify-center gap-2'>
+                  <span className="temp-main">{dayData.average.tempMax}°C</span>
+                  <span className="temp-main">{dayData.average.tempMin}°C</span>
+                </div>
+                {/* <div className="temp-feels">Ощущается как {dayData.average.feels_like}°C</div> */}
+                <div className="weather-desc">{capitalize(dayData.average.description)}</div>
               </div>
             </div>
             <div className="daily-average-details">
-              <div className="detail-item">
+              {/* <div className="detail-item">
                 <Droplet size={16} />
-                <span>Влажность: {dayData.average.humidity}%</span>
-              </div>
+                <span>{dayData.average.humidity}%</span>
+              </div> */}
               <div className="detail-item">
                 <Wind size={16} />
-                <span>Ветер: {dayData.average.wind_speed} м/с, {getWindDirectionArrow(dayData.average.wind_deg)}{getWindDirection(dayData.average.wind_deg)}</span>
+                <span>{Math.round(dayData.average.wind_speed)} м/с, {getWindDirection(dayData.average.wind_deg)}</span>
               </div>
               <div className="detail-item">
                 <Gauge size={16} />
-                <span>Давление: {dayData.average.pressure} гПа</span>
+                <span>{Math.round(dayData.average.pressure * 0.75)} мм.рт.ст</span>
               </div>
-              <div className="detail-item">
+              {/* <div className="detail-item">
                 <Eye size={16} />
-                <span>Видимость: {dayData.average.visibility} км</span>
-              </div>
+                <span>{dayData.average.visibility} км</span>
+              </div> */}
+              {/* <div className="detail-item">
+                <CloudDrizzle size={16} />
+                <span>{dayData.average.pop}%</span>
+              </div> */}
               <div className="detail-item">
-                <Thermometer size={16} />
-                <span>Вероятность осадков: {dayData.average.pop}%</span>
+                <CloudDrizzle size={16} />
+                <span>{dayData.average.precipitation} мм.</span>
               </div>
             </div>
           </div>

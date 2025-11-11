@@ -1,13 +1,8 @@
 export const getWindDirection = (degrees: number): string => {
   const directions = ['С', 'СВ', 'В', 'ЮВ', 'Ю', 'ЮЗ', 'З', 'СЗ'];
-  const index = Math.round(degrees / 45) % 8;
-  return directions[index];
-};
-
-export const getWindDirectionArrow = (degrees: number): string => {
   const arrows = ['⬆️', '↗️', '➡️', '↘️', '⬇️', '↙️', '⬅️', '↖️'];
   const index = Math.round(degrees / 45) % 8;
-  return arrows[index];
+  return `${arrows[index]}${directions[index]}`;
 };
 
 export const capitalize = (str: string):string  => {
