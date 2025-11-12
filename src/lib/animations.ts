@@ -1,4 +1,4 @@
-import { cn } from "../utils/cn"
+import { cn } from "./utils/cn"
 
 export const buttonAnimation = cn(
   "transition-all duration-300 ease-out",

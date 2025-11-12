@@ -1,7 +1,7 @@
 import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { capitalize, getCityTime, CurrentDate } from "@/utils/otherFunc"
+import { capitalize, getCityTime, CurrentDate } from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
 
 import type { RootState } from "@/store"
@@ -13,7 +13,7 @@ export const WeatherDisplay = () => {
   })
   // const [daysCount, setDaysCount] = useState<number>(7);
 
-  
+  // console.log(weather.weather[0].description)
   // const currentWeatherIcon = (weatherType) => {
   //   switch (weatherType) {
   //     case 'Thunderstorm':

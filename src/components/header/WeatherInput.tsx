@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, type FormEvent } from "react"
 import { useDispatch, useSelector } from 'react-redux'
-import { cn } from "@/utils/cn"
+import { cn } from "@/lib/utils/cn"
 // import { debounce } from 'lodash'
 
 import { setCity, clearCity } from '@/store/slices/weatherSlice/currentCitySlice'
@@ -8,6 +8,7 @@ import { setQueryError, clearQueryError } from "@/store/slices/weatherSlice/curr
 import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 
 import { Button } from '../ui/button'
+import { Input } from "../ui/input"
 import { buttonAnimation } from "@/lib/animations"
 
 import type { AppDispatch, RootState } from '@/store'
@@ -97,8 +98,8 @@ const WeatherInput = () => {
   return (
     <div className="flex items-center ml-8 mr-auto">
       {/* <h3 className="text-lg font-bold mb-4">Поиск погоды</h3> */}
-      <form onSubmit={handleSubmit}>
-        <input
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <Input
           type="text"
           value={inputCity}
           onChange={(e) => {setInputCity(e.target.value)}}
@@ -108,7 +109,7 @@ const WeatherInput = () => {
             dispatch(clearQueryError())
           }}
           placeholder="Введите город..."
-          className="border p-2 mr-2 rounded"
+          className="border p-2 rounded"
         />
         <Button 
           type="submit"

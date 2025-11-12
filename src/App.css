@@ -309,7 +309,6 @@ body {
 .daily-average-temp .weather-desc {
   font-size: 1rem;
   color: #34495e;
-  text-transform: capitalize;
 }
 
 .daily-average-details {

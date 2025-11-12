@@ -1,7 +1,7 @@
 // components/Hourly5DayForecast.tsx (на основе 5-Day Forecast)
 import React from 'react';
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
-import { getWindDirection, capitalize } from '@/utils/otherFunc';
+import { getWindDirection } from '@/lib/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { min, max } from 'lodash';
@@ -72,6 +72,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     const mostFrequentWeather = Object.keys(weatherCounts).reduce((a, b) => 
       weatherCounts[a] > weatherCounts[b] ? a : b
     );
+
     
     // Находим иконку для наиболее частого описания
     const mostFrequentHour = dayData.find(hour => 
@@ -164,7 +165,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   if (!forecastData) return null;
 
   const groupedData = groupByDay(forecastData);
-  console.log(groupedData)
+  // console.log(groupedData)
 
   return (
     // <div className="hourly-5day-forecast p-4 rounded-2xl flex-wrap">
@@ -192,7 +193,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                   <span className="temp-main text-gray-400">{dayData.average.tempMin}°</span>
                 </div>
                 {/* <div className="temp-feels">Ощущается как {dayData.average.feels_like}°C</div> */}
-                <div className="weather-desc text-center"><span className='text-sm'>{capitalize(dayData.average.description)}</span></div>
+                <div className=" text-center"><span className='text-sm'>{dayData.average.description}</span></div>
               </div>
             </div>
             <div className="flex flex-col gap-3">
