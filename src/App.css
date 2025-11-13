@@ -224,11 +224,6 @@ body {
   .api-info {
     color: #a0aec0;
   }
-
-  .day-title {
-    color: #cbd5e0;
-    border-bottom-color: #4a5568;
-  }
 }
 
 /* Анимации */
@@ -263,10 +258,9 @@ body {
 }
 
 .day-section {
-  border-radius: 12px;
-  max-width: 15rem;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  /* max-width: 15rem; */
+  /* padding: 1rem; */
+  box-shadow: 120 20px 80px rgba(0,0,0,0.1);
 }
 
 .day-title {
@@ -279,7 +273,7 @@ body {
 /* Стили для карточки средних показателей */
 .daily-average-card {
   background: white;
-  border-radius: 12px;
+  /* border-radius: 12px; */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 

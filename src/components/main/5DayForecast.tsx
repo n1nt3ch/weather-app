@@ -1,12 +1,12 @@
-// components/Hourly5DayForecast.tsx (на основе 5-Day Forecast)
 import React from 'react';
+import { useState } from 'react';
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
-import { getWindDirection } from '@/lib/utils/otherFunc';
+import { getWindDirection, capitalize } from '@/lib/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { min, max } from 'lodash';
 
-import { Wind, Droplet, CloudDrizzle, Gauge, Eye } from "lucide-react"
+import { Wind, Droplet, CloudDrizzle, Gauge, Eye, X } from "lucide-react"
 import {
   Carousel,
   CarouselContent,
@@ -18,7 +18,6 @@ import {
 interface Hourly5DayForecastProps {
   lat: number;
   lon: number;
-  cityName: string;
 }
 
 interface DailyAverage {
@@ -37,6 +36,7 @@ interface DailyAverage {
 }
 
 export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon }) => {
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const { data: forecastData, isLoading, error } = useGet5DayForecastQuery({ lat, lon });
 
   const getDayName = (date: Date): string => {
@@ -53,16 +53,14 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     const humidities = dayData.map(hour => hour.main.humidity);
     const wind_speeds = dayData.map(hour => hour.wind.speed);
     const wind_degs = dayData.map(hour => hour.wind.deg);
-    const pops = dayData.map(hour => hour.pop * 100); // Convert to percentage
+    const pops = dayData.map(hour => hour.pop * 100);
     const visibilities = dayData.map(hour => hour.visibility);
     const precipitations = dayData.map((hour) => {
       const rain = hour.rain && hour.rain['3h'] ? hour.rain['3h'] : 0;
       const snow = hour.snow && hour.snow['3h'] ? hour.snow['3h'] : 0;
-      return rain + snow;  // Сумма дождя и снега в мм за 3 часа
+      return rain + snow;
     });
 
-    
-    // Находим наиболее часто встречающееся описание погоды
     const weatherCounts: { [key: string]: number } = {};
     dayData.forEach(hour => {
       const desc = hour.weather[0].description;
@@ -73,8 +71,6 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       weatherCounts[a] > weatherCounts[b] ? a : b
     );
 
-    
-    // Находим иконку для наиболее частого описания
     const mostFrequentHour = dayData.find(hour => 
       hour.weather[0].description === mostFrequentWeather
     );
@@ -88,7 +84,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       wind_speed: Math.round(wind_speeds.reduce((a, b) => a + b) / wind_speeds.length * 10) / 10,
       wind_deg: Math.round(wind_degs.reduce((a, b) => a + b) / wind_degs.length),
       pop: Math.round(pops.reduce((a, b) => a + b) / pops.length),
-      visibility: Math.round(visibilities.reduce((a, b) => a + b) / visibilities.length / 1000), // Convert to km
+      visibility: Math.round(visibilities.reduce((a, b) => a + b) / visibilities.length / 1000),
       precipitation: Math.round(precipitations.reduce((a, b) => a + b) * 10) / 10,
       description: mostFrequentWeather,
       icon: mostFrequentHour?.weather[0].icon || dayData[0].weather[0].icon
@@ -116,7 +112,6 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       });
     });
 
-    // Calculate averages for each day
     Object.keys(grouped).forEach(dateKey => {
       grouped[dateKey].average = calculateDailyAverage(grouped[dateKey].hours);
     });
@@ -124,30 +119,58 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     return grouped;
   };
 
-  const view3hForecast = (weatherData) => {
+  const handleDayClick = (dateKey: string) => {
+    setSelectedDay(dateKey);
+  };
+
+  const closeHourlyView = () => {
+    setSelectedDay(null);
+  };
+
+  const renderHourlyForecast = (hours: any[], dayName: string) => {
     return (
-      <div className="hourly-section">
-        <h5 className="hourly-title">Почасовой прогноз:</h5>
-        <div className="hourly-cards">
-          {dayData.hours.map((hour: any) => (
-            <div key={hour.dt} className="hourly-card">
-              <div className="hour-time">{hour.time}</div>
-              <img 
-                src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
-                alt={hour.weather[0].description}
-                className="weather-icon"
-              />
-              <div className="hour-temp">{Math.round(hour.main.temp)}°C</div>
-              <div className="hour-details">
-                <div className="hour-pop"><Droplet size={12} /> {Math.round(hour.main.humidity)}%</div>
-                <div className="hour-wind"><Wind size={12} /> {Math.round(hour.wind.speed)} м/с</div>
-              </div>
-            </div>
-          ))}
+      <div className="fixed inset-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-center z-50 p-4">
+        <div className="flex flex-col gap-4 bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold">Почасовой прогноз на <span className='font-bold'>{dayName.toLowerCase()}</span></h3>
+            <button 
+              onClick={closeHourlyView}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
+          <Carousel className='w-full px-6 py-4 border rounded-2xl'>
+            <CarouselContent className='pl-4 w-full gap-2'>
+              {hours.map((hour: any) => (
+                <CarouselItem key={hour.dt} className="day-section bg-blue-100 rounded-lg transition-colors p-4 max-w-30">
+                  <div className="hour-time font-medium">{hour.time}</div>
+                  <img 
+                    src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
+                    alt={hour.weather[0].description}
+                    className="weather-icon mx-auto my-2 w-12 h-12"
+                  />
+                  <div className="hour-temp text-lg font-bold">{Math.round(hour.main.temp)}°C</div>
+                  <div className="hour-details text-sm space-y-1 mt-2">
+                    <div className="hour-pop flex items-center justify-center gap-1">
+                      <Droplet size={12} /> 
+                      {Math.round(hour.main.humidity)}%
+                    </div>
+                    <div className="hour-wind flex items-center justify-center gap-1">
+                      <Wind size={12} /> 
+                      {Math.round(hour.wind.speed)} м/с
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
-      </div> 
-    )
-  }
+      </div>
+    );
+  };
 
   if (isLoading) return <div className="forecast-loading">Загрузка прогноза...</div>;
   if (error) {
@@ -165,92 +188,63 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   if (!forecastData) return null;
 
   const groupedData = groupByDay(forecastData);
-  // console.log(groupedData)
 
   return (
-    // <div className="hourly-5day-forecast p-4 rounded-2xl flex-wrap">
-    <Carousel className='w-full mt-8 px-6 py-4 border rounded-2xl'>
-      <div className='flex justify-between'>
-        <h3 className='text-3xl font-bold mb-2'>Прогноз на 5 дней</h3>|
-
-      </div>
-      <CarouselContent className='pl-4 w-full gap-2'>
-      {Object.entries(groupedData).map(([dateKey, dayData]) => (
-        <CarouselItem key={dateKey} className="day-section bg-blue-300">
-          <h4 className="day-title">{dayData.dayName}</h4>
-          
-          {/* Средние показатели за сутки */}
-          <div className="daily-average-card p-4">
-            <div className="daily-average-header flex-col">
-              <img 
-                src={`https://openweathermap.org/img/wn/${dayData.average.icon}@2x.png`} 
-                alt={dayData.average.description}
-                className="weather-icon-large"
-              />
-              <div className="daily-average-temp">
-                <div className='flex justify-center gap-8'>
-                  <span className="temp-main">{dayData.average.tempMax}°</span>
-                  <span className="temp-main text-gray-400">{dayData.average.tempMin}°</span>
-                </div>
-                {/* <div className="temp-feels">Ощущается как {dayData.average.feels_like}°C</div> */}
-                <div className=" text-center"><span className='text-sm'>{dayData.average.description}</span></div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-3">
-              {/* <div className="detail-item">
-                <Droplet size={16} />
-                <span>{dayData.average.humidity}%</span>
-              </div> */}
-              <div className="detail-item">
-                <Wind size={16} />
-                <span>{Math.round(dayData.average.wind_speed)} м/с, {getWindDirection(dayData.average.wind_deg)}</span>
-              </div>
-              <div className="detail-item">
-                <Gauge size={16} />
-                <span>{Math.round(dayData.average.pressure * 0.75)} мм.рт.ст</span>
-              </div>
-              {/* <div className="detail-item">
-                <Eye size={16} />
-                <span>{dayData.average.visibility} км</span>
-              </div> */}
-              {/* <div className="detail-item">
-                <CloudDrizzle size={16} />
-                <span>{dayData.average.pop}%</span>
-              </div> */}
-              <div className="detail-item">
-                <CloudDrizzle size={16} />
-                <span>{dayData.average.precipitation} мм.</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Почасовой прогноз */}
-          {/* <div className="hourly-section">
-            <h5 className="hourly-title">Почасовой прогноз:</h5>
-            <div className="hourly-cards">
-              {dayData.hours.map((hour: any) => (
-                <div key={hour.dt} className="hourly-card">
-                  <div className="hour-time">{hour.time}</div>
+    <>
+      <Carousel className='w-full mt-8 px-6 py-4 border rounded-2xl'>
+        <h3 className='text-2xl font-bold mb-2'>Прогноз на 5 дней</h3>
+        <CarouselContent className='pl-4 w-full gap-2'>
+          {Object.entries(groupedData).map(([dateKey, dayData]) => (
+            <CarouselItem 
+              key={dateKey} 
+              onClick={() => handleDayClick(dateKey)} 
+              className="day-section max-w-55 bg-blue-100 rounded-lg cursor-pointer hover:bg-blue-200 transition-colors p-4"
+            >
+              <h4 className="text-xl font-semibold mb-3">{capitalize(dayData.dayName)}</h4>
+              
+              <div className="daily-average-card rounded-lg p-2 flex flex-col items-center">
+                <div className="daily-average-header flex flex-col items-center mb-4">
                   <img 
-                    src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
-                    alt={hour.weather[0].description}
-                    className="weather-icon"
+                    src={`https://openweathermap.org/img/wn/${dayData.average.icon}@2x.png`} 
+                    alt={dayData.average.description}
+                    className="weather-icon-large w-16 h-16"
                   />
-                  <div className="hour-temp">{Math.round(hour.main.temp)}°C</div>
-                  <div className="hour-details">
-                    <div className="hour-pop"><Droplet size={12} /> {Math.round(hour.main.humidity)}%</div>
-                    <div className="hour-wind"><Wind size={12} /> {Math.round(hour.wind.speed)} м/с</div>
+                  <div className="daily-average-temp">
+                    <div className='flex justify-center gap-8 mb-2'>
+                      <span className="temp-main text-2xl font-bold">{dayData.average.tempMax}°</span>
+                      <span className="temp-main text-2xl font-bold text-gray-500">{dayData.average.tempMin}°</span>
+                    </div>
+                    <div className="text-center">
+                      <span className='text-sm text-gray-600'>{capitalize(dayData.average.description)}</span>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div> */}
-        </CarouselItem >
-      ))}
-      
-      </CarouselContent>
-      <CarouselPrevious />
-  <CarouselNext />
+                <div className="flex flex-col gap-2">
+                  <div className="detail-item flex items-center gap-2">
+                    <Wind size={16} className="text-gray-500" />
+                    <span className="text-sm">{Math.round(dayData.average.wind_speed)} м/с, {getWindDirection(dayData.average.wind_deg)}</span>
+                  </div>
+                  <div className="detail-item flex items-center gap-2">
+                    <Gauge size={16} className="text-gray-500" />
+                    <span className="text-sm">{Math.round(dayData.average.pressure * 0.75)} мм.рт.ст</span>
+                  </div>
+                  <div className="detail-item flex items-center gap-2">
+                    <CloudDrizzle size={16} className="text-gray-500" />
+                    <span className="text-sm">{dayData.average.precipitation} мм</span>
+                  </div>
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
       </Carousel>
+
+      {/* Модальное окно с почасовым прогнозом */}
+      {selectedDay && groupedData[selectedDay] && 
+        renderHourlyForecast(groupedData[selectedDay].hours, groupedData[selectedDay].dayName)
+      }
+    </>
   );
 };
