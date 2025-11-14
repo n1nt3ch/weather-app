@@ -190,10 +190,7 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .hour-details {
-    flex-direction: column;
-    gap: 0.3rem;
-  }
+
 }
 
 /* Темная тема */
@@ -211,14 +208,6 @@ body {
     background: rgba(45, 55, 72, 0.9);
     color: #e2e8f0;
     border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .hour-time {
-    color: #e2e8f0;
-  }
-
-  .hour-temp {
-    color: #63b3ed;
   }
 
   .api-info {
@@ -348,12 +337,6 @@ body {
   flex-shrink: 0;
 }
 
-.hour-time {
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-
 .weather-icon {
   width: 40px;
   height: 40px;
@@ -369,14 +352,6 @@ body {
 .hour-details {
   font-size: 0.75rem;
   color: #7f8c8d;
-}
-
-.hour-pop, .hour-wind {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  margin: 0.25rem 0;
 }
 
 /* Адаптивность */
