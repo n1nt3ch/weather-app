@@ -144,36 +144,37 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
           </div>
           <Carousel className='w-full px-6 py-4 border rounded-2xl'>
             <CarouselContent className='pl-4 w-full gap-2'>
-              {hours.map((hour: any) => {console.log(hour.main.pressure) 
-              return(
-                <CarouselItem key={hour.dt} className="day-section flex flex-col justify-center items-center gap-2 bg-blue-100 rounded-lg transition-colors p-2 max-w-30">
-                  <div className="font-medium">{hour.time}</div>
-                  <img 
-                    src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
-                    alt={hour.weather[0].description}
-                    className="weather-icon mx-auto w-12 h-12"
-                  />
-                  <div className="text-lg font-bold">{Math.round(hour.main.temp)}°C</div>
-                  <div className="hour-details flex flex-col items-start text-sm space-y-1">
-                    <div className="flex gap-1">
-                      <Droplet size={12} /> 
-                      {Math.round(hour.main.humidity)}%
+              {hours.map((hour: any) => 
+                (
+                  <CarouselItem key={hour.dt} className="day-section flex flex-col justify-center items-center gap-2 bg-blue-100 rounded-lg transition-colors p-2 max-w-30">
+                    <div className="font-medium">{hour.time}</div>
+                    <img 
+                      src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
+                      alt={hour.weather[0].description}
+                      className="weather-icon mx-auto w-12 h-12"
+                    />
+                    <div className="text-lg font-bold">{Math.round(hour.main.temp)}°C</div>
+                    <div className="hour-details flex flex-col items-start text-sm space-y-1">
+                      <div className="flex gap-1">
+                        <Droplet size={12} /> 
+                        {Math.round(hour.main.humidity)}%
+                      </div>
+                      <div className="flex gap-1">
+                        <Wind size={12} /> 
+                        {Math.round(hour.wind.speed)} м/с
+                      </div>
+                      <div className="detail-item flex items-center gap-2">
+                        <Gauge size={16} className="text-gray-500" />
+                        <span className="text-sm">{Math.round(hour.main.pressure * 0.75)} мм.рт.ст</span>
+                      </div>
+                      <div className="detail-item flex items-center gap-2">
+                        <CloudDrizzle size={16} className="text-gray-500" />
+                        {/* <span className="text-sm">{hour.rain['3h'] + hour.snow['3h']} мм</span> */}
+                      </div>
                     </div>
-                    <div className="flex gap-1">
-                      <Wind size={12} /> 
-                      {Math.round(hour.wind.speed)} м/с
-                    </div>
-                    <div className="detail-item flex items-center gap-2">
-                      <Gauge size={16} className="text-gray-500" />
-                      <span className="text-sm">{Math.round(hour.main.pressure * 0.75)} мм.рт.ст</span>
-                    </div>
-                    <div className="detail-item flex items-center gap-2">
-                      <CloudDrizzle size={16} className="text-gray-500" />
-                      {/* <span className="text-sm">{hour.rain['3h'] + hour.snow['3h']} мм</span> */}
-                    </div>
-                  </div>
-                </CarouselItem>
-              )})}
+                  </CarouselItem>
+                )
+              )}
             </CarouselContent>
             <CarouselPrevious className='hover:bg-gray-300 transition-colors'/>
             <CarouselNext className='hover:bg-gray-300 transition-colors'/>
@@ -211,7 +212,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
               onClick={() => handleDayClick(dateKey)} 
               className="day-section max-w-55 bg-blue-100 rounded-lg cursor-pointer hover:bg-blue-200 transition-colors p-4"
             >
-              <h4 className="text-xl font-semibold mb-3">{capitalize(dayData.dayName)}</h4>
+              <h4 className="text-xl font-semibold mb-2">{capitalize(dayData.dayName)}</h4>
               
               <div className="daily-average-card rounded-lg p-2 flex flex-col items-center">
                 <div className="daily-average-header flex flex-col items-center mb-4">
@@ -225,8 +226,8 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                       <span className="temp-main text-2xl font-bold">{dayData.average.tempMax}°</span>
                       <span className="temp-main text-2xl font-bold text-gray-500">{dayData.average.tempMin}°</span>
                     </div>
-                    <div className="text-center">
-                      <span className='text-sm text-gray-600'>{capitalize(dayData.average.description)}</span>
+                    <div className="text-center w-full max-h-6">
+                      <span className='text-sm text-nowrap text-gray-600'>{capitalize(dayData.average.description)}</span>
                     </div>
                   </div>
                 </div>
@@ -248,8 +249,8 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className='hover:bg-gray-300 transition-colors'/>
-        <CarouselNext className='hover:bg-gray-300 transition-colors'/>
+        <CarouselPrevious className='carousel-btn hover:bg-gray-300 transition-colors'/>
+        <CarouselNext className='carousel-btn hover:bg-gray-300 transition-colors'/>
       </Carousel>
 
       {/* Модальное окно с почасовым прогнозом */}

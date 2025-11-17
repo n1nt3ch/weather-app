@@ -40,7 +40,7 @@ export const WeatherDisplay = () => {
     
     const updateTime = () => {
       const time = getCityTime(weather.timezone);
-      setLocalTime(time.toLocaleTimeString('ru-RU'));
+      setLocalTime(time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     };
     
     updateTime();

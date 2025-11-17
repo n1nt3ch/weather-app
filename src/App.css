@@ -185,9 +185,21 @@ body {
   }
 }
 
+.carousel-btn {
+  display: none;
+}
+
 @media (max-width: 480px) {
   .hourly-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+
+}
+
+@media (max-width: 1535px) {
+  .carousel-btn {
+    display: flex;
   }
 
 
