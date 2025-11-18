@@ -9,7 +9,7 @@ import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi
 
 import { Button } from '../ui/button'
 import { Input } from "../ui/input"
-import { buttonAnimation } from "@/lib/animations"
+import { buttonAnimation } from "@/lib/styles"
 
 import type { AppDispatch, RootState } from '@/store'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'

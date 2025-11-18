@@ -10,3 +10,7 @@ export const themeButtonAnimation = cn(
   "duration-300 ease-out",
   "hover:scale-105 hover:-translate-y-0.5",
 )
+
+export const bgDarkTheme = cn(
+  'background-color: #161617'
+)
