@@ -1,14 +1,21 @@
 import { useTheme } from "@/context/theme-provider"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from 'react-redux'
-import { Moon, Sun } from "lucide-react"
 import { Link } from "react-router-dom"
+
+import { Moon, Sun, Settings, AlertCircleIcon } from "lucide-react"
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "../ui/alert"
-import { AlertCircleIcon } from "lucide-react"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../ui/popover"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
 
 import type { AppDispatch } from '@/store'
 import type { RootState } from "@/store"
@@ -17,14 +24,23 @@ import { setDarkTheme, setLightTheme } from "@/store/slices/themeSlice/themeSlic
 import { clearQueryError } from "@/store/slices/weatherSlice/currentQueryError.ts"
 
 import WeatherInput from './WeatherInput.tsx'
+import { buttonAnimation } from "@/lib/styles.ts"
+import { cn } from "@/lib/utils/cn.ts"
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
+  const [settings, setSettings] = useState('closed');
   const isDark = theme === 'dark';
   const dispatch = useDispatch<AppDispatch>()
 
   const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
-  
+
+  const handleClick = () => settings === 'closed' ? setSettings('opened') : setSettings('closed')
+
+  const settingsBtn = cn(
+    settings === 'closed' ? 'rotate-180' : 'rotate-0'
+  )
+
   useEffect(() => {
       if (isDark) {
         dispatch(setDarkTheme());
@@ -58,7 +74,56 @@ const Header = () => {
           </Alert>
         }
         <div>
-          <button onClick={() => setTheme(isDark ? 'light' : 'dark')}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button onClick={handleClick} className={`${settingsBtn} flex items-center cursor-pointer transition-transform duration-500`}><Settings /></button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <h4 className="leading-none font-medium">Dimensions</h4>
+                  <p className="text-muted-foreground text-sm">
+                    Set the dimensions for the layer.
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="width">Width</Label>
+                    <Input
+                      id="width"
+                      defaultValue="100%"
+                      className="col-span-2 h-8"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="maxWidth">Max. width</Label>
+                    <Input
+                      id="maxWidth"
+                      defaultValue="300px"
+                      className="col-span-2 h-8"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="height">Height</Label>
+                    <Input
+                      id="height"
+                      defaultValue="25px"
+                      className="col-span-2 h-8"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="maxHeight">Max. height</Label>
+                    <Input
+                      id="maxHeight"
+                      defaultValue="none"
+                      className="col-span-2 h-8"
+                    />
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+          {/* <button onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className={`flex items-center cursor-pointer transition-transform duration-500
             ${isDark ? 'rotate-180' : 'rotate-0'}`}
           >
@@ -67,7 +132,7 @@ const Header = () => {
               ) : (
                 <Moon className="h-6 w-6 text-blue-500 rotate-0 transition-all"></Moon>
               )}
-          </button>
+          </button> */}
         </div>
       </div>
     </header>
