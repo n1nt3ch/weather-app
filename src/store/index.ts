@@ -1,15 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { weatherApi } from './api/weatherApi/weatherApi'
 import { forecastApi } from './api/forecastApi/forecastApi'
-import currentCitySlice from './slices/weatherSlice/currentCitySlice'
-import currentQueryError from './slices/weatherSlice/currentQueryError'
-import currentThemeSlice from './slices/themeSlice/themeSlice'
+import currentCitySlice from './slices/weatherSlices/currentCitySlice'
+import currentQueryError from './slices/weatherSlices/currentQueryError'
+import currentSettingsSlice from './slices/settingsSlice'
 
 export const store = configureStore({
   reducer: {
     city: currentCitySlice,
     queryError: currentQueryError,
-    theme: currentThemeSlice,
+    settings: currentSettingsSlice,
     [weatherApi.reducerPath]: weatherApi.reducer,
     [forecastApi.reducerPath]: forecastApi.reducer,
   },

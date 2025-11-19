@@ -1,7 +1,7 @@
 import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { capitalize, getCityTime, CurrentDate } from "@/lib/utils/otherFunc"
+import { capitalize, getCityTime, CurrentDate, tempConvertation } from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
 
 import type { RootState } from "@/store"
@@ -9,6 +9,7 @@ import type { RootState } from "@/store"
 export const WeatherDisplay = () => {
   const [localTime, setLocalTime] = useState('');
   const currentCity = useSelector((state: RootState) => state.city.selectedCity)
+  const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
   const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
   })
   // const [daysCount, setDaysCount] = useState<number>(7);
@@ -59,7 +60,10 @@ export const WeatherDisplay = () => {
                 <h1 className="text-5xl mb-24">{capitalize(weather.weather[0].description)}</h1>
                 <div className="flex flex-col content-between">
                   <span className="text-6xl font-medium">
-                    {Math.round(weather.main.temp)}°C
+                    {tempConvertation(weather.main.temp, currentTemp)}
+                    {console.log(weather.main.temp)}
+                    {console.log(currentTemp)}
+                    {/* {Math.round(weather.main.temp)}°C */}
                   </span>
                   <span className="text-2xl">
                     {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, 

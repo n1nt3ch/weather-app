@@ -14,32 +14,43 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../ui/popover"
-import { Input } from "../ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
 import { Label } from "../ui/label"
 
 import type { AppDispatch } from '@/store'
 import type { RootState } from "@/store"
 
-import { setDarkTheme, setLightTheme } from "@/store/slices/themeSlice/themeSlice.ts"
-import { clearQueryError } from "@/store/slices/weatherSlice/currentQueryError.ts"
+import { 
+  setDarkTheme, setLightTheme, 
+  setTempC, setTempF, 
+  setPressureMm, setPressureHpa 
+} from "@/store/slices/settingsSlice.ts"
+import { clearQueryError } from "@/store/slices/weatherSlices/currentQueryError.ts"
 
 import WeatherInput from './WeatherInput.tsx'
 import { buttonAnimation } from "@/lib/styles.ts"
-import { cn } from "@/lib/utils/cn.ts"
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
-  const [settings, setSettings] = useState('closed');
   const isDark = theme === 'dark';
   const dispatch = useDispatch<AppDispatch>()
 
+  const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
+  const currentPressure = useSelector((state: RootState) => state.settings.selectedPressure)
   const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
 
-  const handleClick = () => settings === 'closed' ? setSettings('opened') : setSettings('closed')
+  // const handleClick = () => settings === 'closed' ? setSettings('opened') : setSettings('closed')
 
-  const settingsBtn = cn(
-    settings === 'closed' ? 'rotate-180' : 'rotate-0'
-  )
+  // const settingsBtn = cn(
+  //   settings === 'closed' ? 'rotate-0' : 'rotate-180'
+  // )
 
   useEffect(() => {
       if (isDark) {
@@ -47,7 +58,7 @@ const Header = () => {
       } else {
         dispatch(setLightTheme());
       }
-    }, [isDark, dispatch])
+  }, [isDark, dispatch])
   
   return (
     <header className="sticky top-0 border-b z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -76,48 +87,58 @@ const Header = () => {
         <div>
           <Popover>
             <PopoverTrigger asChild>
-              <button onClick={handleClick} className={`${settingsBtn} flex items-center cursor-pointer transition-transform duration-500`}><Settings /></button>
+              <button className={`${buttonAnimation} flex items-center cursor-pointer transition-transform duration-500`}><Settings /></button>
             </PopoverTrigger>
             <PopoverContent className="w-80">
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <h4 className="leading-none font-medium">Dimensions</h4>
-                  <p className="text-muted-foreground text-sm">
+                  <h4 className="leading-none font-medium">Настройки</h4>
+                  {/* <p className="text-muted-foreground text-sm">
                     Set the dimensions for the layer.
-                  </p>
+                  </p> */}
                 </div>
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="width">Width</Label>
-                    <Input
-                      id="width"
-                      defaultValue="100%"
-                      className="col-span-2 h-8"
-                    />
+                    <Label htmlFor="theme">Тема</Label>
+                    <Select onValueChange={(value) => value === 'light' ? setTheme('light') : setTheme('dark')} defaultValue={theme}>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Выберите тему'/>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value='light'>светлая</SelectItem>
+                          <SelectItem value='dark'>темная</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="maxWidth">Max. width</Label>
-                    <Input
-                      id="maxWidth"
-                      defaultValue="300px"
-                      className="col-span-2 h-8"
-                    />
+                    <Label htmlFor="temperature">Температура</Label>
+                    <Select onValueChange={(value) => value === 'c' ? dispatch(setTempC()) : dispatch(setTempF())} defaultValue={currentTemp}>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Выберите единицу'/>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value='c'>°C</SelectItem>
+                          <SelectItem value='f'>°F</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="height">Height</Label>
-                    <Input
-                      id="height"
-                      defaultValue="25px"
-                      className="col-span-2 h-8"
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="maxHeight">Max. height</Label>
-                    <Input
-                      id="maxHeight"
-                      defaultValue="none"
-                      className="col-span-2 h-8"
-                    />
+                    <Label htmlFor="pressure">Давление</Label>
+                    <Select onValueChange={(value) => value === 'mm' ? setPressureHpa() : setPressureMm()} defaultValue={currentPressure}>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Выберите единицу'/>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value='mm'>мм.рт.ст</SelectItem>
+                          <SelectItem value='hpa'>гПа</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { cn } from "@/lib/utils/cn"
 // import { debounce } from 'lodash'
 
-import { setCity, clearCity } from '@/store/slices/weatherSlice/currentCitySlice'
-import { setQueryError, clearQueryError } from "@/store/slices/weatherSlice/currentQueryError"
+import { setCity, clearCity } from '@/store/slices/weatherSlices/currentCitySlice'
+import { setQueryError, clearQueryError } from "@/store/slices/weatherSlices/currentQueryError"
 import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 
 import { Button } from '../ui/button'
@@ -19,7 +19,7 @@ const WeatherInput = () => {
   const [inputCity, setInputCity] = useState<string>('')
   const [queryCity, setQueryCity] = useState<string>('')
 
-  const currentTheme = useSelector((state: RootState) => state.theme.selectedTheme)
+  const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
 
   const dispatch = useDispatch<AppDispatch>()
   const [getCurrentQueryWeather] = useLazyGetCurrentWeatherQuery() 

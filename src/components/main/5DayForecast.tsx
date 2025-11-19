@@ -42,7 +42,7 @@ interface DailyAverage {
 export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon }) => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
-  const currentTheme = useSelector((state: RootState) => state.theme.selectedTheme)
+  const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
   const { data: forecastData, isLoading, error } = useGet5DayForecastQuery({ lat, lon });
 
   const getDayName = (date: Date): string => {

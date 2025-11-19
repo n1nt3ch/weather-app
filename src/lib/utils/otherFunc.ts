@@ -60,3 +60,13 @@ export const CurrentDate = () => {
     year
   }
 };
+
+export const tempConvertation = (value: number, scale: string): string => {
+  const cToF = (value * 9 / 5) + 32;
+  return scale === 'c' ? `${Math.round(value)} °C` : `${Math.round(cToF)} °F`; 
+};
+
+export const pressureConvertation = (value: number, pressureUnit: string) => {
+  const hpaToMm = value * 1.333;
+  return pressureUnit === 'hpa' ? `${value} гПа` : `${hpaToMm} мм.рт.ст`
+};
