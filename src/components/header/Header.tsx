@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Label } from "../ui/label"
+import { Button } from "../ui/button"
 
 import type { AppDispatch } from '@/store'
 import type { RootState } from "@/store"
@@ -87,7 +88,7 @@ const Header = () => {
         <div>
           <Popover>
             <PopoverTrigger asChild>
-              <button className={`${buttonAnimation} flex items-center cursor-pointer transition-transform duration-500`}><Settings /></button>
+              <Button className={`${buttonAnimation} flex items-center cursor-pointer rounded-full w-9`}><Settings className="size-6"/></Button>
             </PopoverTrigger>
             <PopoverContent className="w-80">
               <div className="grid gap-4">
@@ -128,7 +129,7 @@ const Header = () => {
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
                     <Label htmlFor="pressure">Давление</Label>
-                    <Select onValueChange={(value) => value === 'mm' ? setPressureHpa() : setPressureMm()} defaultValue={currentPressure}>
+                    <Select onValueChange={(value) => value === 'mm' ? dispatch(setPressureMm()) : dispatch(setPressureHpa())} defaultValue={currentPressure}>
                       <SelectTrigger>
                         <SelectValue placeholder='Выберите единицу'/>
                       </SelectTrigger>

@@ -59,12 +59,7 @@ export const WeatherDisplay = () => {
               <div className="flex-col">
                 <h1 className="text-5xl mb-24">{capitalize(weather.weather[0].description)}</h1>
                 <div className="flex flex-col content-between">
-                  <span className="text-6xl font-medium">
-                    {tempConvertation(weather.main.temp, currentTemp)}
-                    {console.log(weather.main.temp)}
-                    {console.log(currentTemp)}
-                    {/* {Math.round(weather.main.temp)}°C */}
-                  </span>
+                  <span className="text-6xl font-medium">{`${tempConvertation(weather.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</span>
                   <span className="text-2xl">
                     {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, 
                      ${localTime}
@@ -83,7 +78,6 @@ export const WeatherDisplay = () => {
             <Hourly5DayForecast
               lat={weather.coord.lat}
               lon={weather.coord.lon}
-              cityName={currentCity}
             />
             
           {/* <h4 className="font-bold text-xl">

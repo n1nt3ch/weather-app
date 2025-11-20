@@ -63,10 +63,10 @@ export const CurrentDate = () => {
 
 export const tempConvertation = (value: number, scale: string): string => {
   const cToF = (value * 9 / 5) + 32;
-  return scale === 'c' ? `${Math.round(value)} °C` : `${Math.round(cToF)} °F`; 
+  return scale === 'c' ? Math.round(value) : Math.round(cToF); 
 };
 
 export const pressureConvertation = (value: number, pressureUnit: string) => {
-  const hpaToMm = value * 1.333;
-  return pressureUnit === 'hpa' ? `${value} гПа` : `${hpaToMm} мм.рт.ст`
+  const hpaToMm = value / 1.333;
+  return pressureUnit === 'hpa' ? `${Math.round(value)} гПа` : `${Math.round(hpaToMm)} мм.рт.ст`
 };

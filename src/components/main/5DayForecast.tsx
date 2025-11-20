@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useSelector } from "react-redux";
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
-import { capitalize, getWindDirection } from '@/lib/utils/otherFunc';
+import { capitalize, getWindDirection, pressureConvertation, tempConvertation } from '@/lib/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { min, max } from 'lodash';
@@ -18,6 +18,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { bgDarkTheme } from '@/lib/styles';
+import { cn } from '@/lib/utils/cn';
 
 interface Hourly5DayForecastProps {
   lat: number;
@@ -43,7 +44,14 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
+  const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
+  const currentPressure = useSelector((state: RootState) => state.settings.selectedPressure)
+  
   const { data: forecastData, isLoading, error } = useGet5DayForecastQuery({ lat, lon });
+
+  const cardBg = cn(
+    currentTheme === 'light' ? ' bg-blue-100 hover:bg-blue-200' : ''
+  ) 
 
   const getDayName = (date: Date): string => {
     if (isToday(date)) return 'Сегодня';
@@ -152,6 +160,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     setSelectedDay(null);
   };
 
+
   const renderHourlyForecast = (hours: any[], dayName: string) => {
     return (
       <div 
@@ -169,6 +178,8 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
           <Carousel className='w-full px-6 py-4 rounded-2xl'>
             <CarouselContent className='pl-4 w-full gap-2'>
               {hours.map((hour: any) => { 
+                  console.log(pressureConvertation(hour.main.pressure, currentPressure))
+
                 const rain = hour.rain ? hour.rain['3h'] : null;
                 const snow = hour.snow ? hour.snow['3h'] : null;
 
@@ -180,7 +191,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                       alt={hour.weather[0].description}
                       className="weather-icon mx-auto w-12 h-12"
                     />
-                    <div className="text-lg font-bold">{Math.round(hour.main.temp)}°C</div>
+                    <div className="text-lg font-bold">{`${tempConvertation(hour.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</div>
                     <div className="hour-details flex flex-col items-start text-sm space-y-1">
                       <div className="flex gap-1">
                         <Droplet size={12} /> 
@@ -192,7 +203,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                       </div>
                       <div className="flex gap-1">
                         <Gauge size={12} />
-                        <span>{Math.round(hour.main.pressure * 0.75)} мм.рт.ст</span>
+                        <span>{pressureConvertation(hour.main.pressure, currentPressure)}</span>
                       </div>
                       <div className="flex gap-1">
                         <CloudDrizzle size={12} />
@@ -239,11 +250,11 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
             <CarouselItem 
               key={dateKey} 
               onClick={() => handleDayClick(dateKey)} 
-              className="day-section max-w-55 bg-blue-100 rounded-lg cursor-pointer hover:bg-blue-200 transition-colors p-4"
+              className="day-section max-w-55 bg-neutral-800 hover:bg-neutral-900 rounded-lg cursor-pointer transition-colors p-4"
             >
               <h4 className="text-xl font-semibold mb-2">{capitalize(dayData.dayName)}</h4>
               
-              <div className="daily-average-card rounded-lg p-2 flex flex-col items-center">
+              <div className="daily-average-card bg-neutral-500 rounded-lg p-2 flex flex-col items-center">
                 <div className="daily-average-header flex flex-col items-center mb-4">
                   <img 
                     src={`https://openweathermap.org/img/wn/${dayData.average.icon}@2x.png`} 
@@ -251,9 +262,9 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                     className="weather-icon-large w-16 h-16"
                   />
                   <div className="daily-average-temp">
-                    <div className='flex justify-center gap-8 mb-2'>
-                      <span className="temp-main text-2xl font-bold">{dayData.average.tempMax}°</span>
-                      <span className="temp-main text-2xl font-bold text-gray-500">{dayData.average.tempMin}°</span>
+                    <div className='flex justify-center gap-6 mb-2'>
+                      <span className="temp-main text-2xl font-bold">{tempConvertation(dayData.average.tempMax, currentTemp)}°</span>
+                      <span className="temp-main text-2xl font-bold text-gray-500">{tempConvertation(dayData.average.tempMin, currentTemp)}°</span>
                     </div>
                     <div className="text-center w-full max-h-6">
                       <span className='text-sm text-nowrap text-gray-600'>{capitalize(dayData.average.description)}</span>
@@ -262,18 +273,18 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="detail-item flex items-center gap-2">
-                    <Wind size={16} className="text-gray-500" />
+                    <Wind size={16} />
                     <div className='flex '>
                       <span className="text-sm">{Math.round(dayData.average.wind_speed)} м/с, {windDirection.direction}</span>
                       <img src={windDirection.arrow} className='size-5' alt="" />
                     </div>
                   </div>
                   <div className="detail-item flex items-center gap-2">
-                    <Gauge size={16} className="text-gray-500" />
-                    <span className="text-sm">{Math.round(dayData.average.pressure * 0.75)} мм.рт.ст</span>
+                    <Gauge size={16} />
+                    <span className="text-sm">{pressureConvertation(dayData.average.pressure, currentPressure)}</span>
                   </div>
                   <div className="detail-item flex items-center gap-2">
-                    <CloudDrizzle size={16} className="text-gray-500" />
+                    <CloudDrizzle size={16} />
                     <span className="text-sm">{dayData.average.precipitation} мм</span>
                   </div>
                 </div>

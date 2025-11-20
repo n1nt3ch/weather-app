@@ -10,6 +10,7 @@ import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi
 import { Button } from '../ui/button'
 import { Input } from "../ui/input"
 import { buttonAnimation } from "@/lib/styles"
+import { MapPin } from "lucide-react"
 
 import type { AppDispatch, RootState } from '@/store'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
@@ -19,7 +20,7 @@ const WeatherInput = () => {
   const [inputCity, setInputCity] = useState<string>('')
   const [queryCity, setQueryCity] = useState<string>('')
 
-  const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
+  // const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
 
   const dispatch = useDispatch<AppDispatch>()
   const [getCurrentQueryWeather] = useLazyGetCurrentWeatherQuery() 
@@ -78,15 +79,16 @@ const WeatherInput = () => {
   if (queryCity) {
     return (
       <div className="p-2 flex items-center justify-between mx-8 mr-auto">
-        <div className="flex">
-          <img 
+        <div className="flex gap-1">
+          {/* <img 
             className='w-7 h-7'
             src={currentTheme === 'dark'
              ? 
              'src/context/icons/location-pointer-white.svg' 
              : 'src/context/icons/location-pointer-black.svg'} 
             alt="Location"
-          />
+          /> */}
+          <MapPin className="size-5 my-1"/>
           <span className="text-2xl font-semibold cursor-pointer" onClick={handleEditCity}>
             {queryCity}
           </span>
