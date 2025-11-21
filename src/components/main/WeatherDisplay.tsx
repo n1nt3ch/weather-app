@@ -54,51 +54,29 @@ export const WeatherDisplay = () => {
       {isLoading && <div>Загрузка погоды...</div>}
 
       {weather && (
-        <div className="py-8 rounded">
-          <div className="flex justify-between">
-              <div className="flex-col">
-                <h1 className="text-5xl mb-24">{capitalize(weather.weather[0].description)}</h1>
-                <div className="flex flex-col content-between">
-                  <span className="text-6xl font-medium">{`${tempConvertation(weather.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</span>
-                  <span className="text-2xl">
-                    {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, 
-                     ${localTime}
-                    `}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <img
-                  src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
-                  alt={weather.weather[0].description}
-                  className="size-50"
-                />
+        <div className="pt-4">
+          <div className="flex justify-between border rounded-2xl py-8 pl-6">
+            <div className="flex flex-col gap-60">
+              <h1 className="text-5xl">{capitalize(weather.weather[0].description)}</h1>
+              <div className="flex flex-col content-between">
+                <span className="text-6xl font-medium">{`${tempConvertation(weather.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</span>
+                <span className="text-2xl">
+                  {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, ${localTime}`}
+                </span>
               </div>
             </div>
-            <Hourly5DayForecast
-              lat={weather.coord.lat}
-              lon={weather.coord.lon}
-            />
-            
-          {/* <h4 className="font-bold text-xl">
-            {weather.name}, {weather.sys.country}
-          </h4>
-          <div className="flex items-center mt-2">
-            <img
-              src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
-              alt={weather.weather[0].description}
-            />
-            <span className="text-2xl ml-2">
-              {Math.round(weather.main.temp)}°C
-            </span>
+            <div className="flex items-center">
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+                alt={weather.weather[0].description}
+                className="size-50"
+              />
+            </div>
           </div>
-          <p className="capitalize">{weather.weather[0].description}</p>
-          <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
-            <div>Ощущается: {Math.round(weather.main.feels_like)}°C</div>
-            <div>Влажность: {weather.main.humidity}%</div>
-            <div>Ветер: {weather.wind.speed} м/с</div>
-            <div>Давление: {Math.round(weather.main.pressure * 0.75)} мм.рт.ст</div>
-          </div> */}
+          <Hourly5DayForecast
+            lat={weather.coord.lat}
+            lon={weather.coord.lon}
+          />
         </div>
       )}
     </>
