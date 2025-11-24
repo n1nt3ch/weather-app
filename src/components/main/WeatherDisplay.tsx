@@ -14,8 +14,9 @@ export const WeatherDisplay = () => {
   })
   // const [daysCount, setDaysCount] = useState<number>(7);
 
-  // console.log(weather.weather[0].description)
-  // const currentWeatherIcon = (weatherType) => {
+  console.log(weather)
+
+  // const currentWeatherIcon = (weatherType: string) => {
   //   switch (weatherType) {
   //     case 'Thunderstorm':
   //       return '';
@@ -28,9 +29,9 @@ export const WeatherDisplay = () => {
   //     case 'Atmosphere':
   //       return '';
   //     case 'Clear':
-  //       return '';
+  //       return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXN1bi1pY29uIGx1Y2lkZS1zdW4iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjQiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtNC45MyA0LjkzIDEuNDEgMS40MSIvPjxwYXRoIGQ9Im0xNy42NiAxNy42NiAxLjQxIDEuNDEiLz48cGF0aCBkPSJNMiAxMmgyIi8+PHBhdGggZD0iTTIwIDEyaDIiLz48cGF0aCBkPSJtNi4zNCAxNy42Ni0xLjQxIDEuNDEiLz48cGF0aCBkPSJtMTkuMDcgNC45My0xLjQxIDEuNDEiLz48L3N2Zz4=';
   //     case 'Clouds':
-  //       return '';
+  //       return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNsb3VkeS1pY29uIGx1Y2lkZS1jbG91ZHkiPjxwYXRoIGQ9Ik0xNy41IDIxSDlhNyA3IDAgMSAxIDYuNzEtOWgxLjc5YTQuNSA0LjUgMCAxIDEgMCA5WiIvPjxwYXRoIGQ9Ik0yMiAxMGEzIDMgMCAwIDAtMy0zaC0yLjIwN2E1LjUwMiA1LjUwMiAwIDAgMC0xMC43MDIuNSIvPjwvc3ZnPg==';
   //     default: 
   //       return;
   //   }

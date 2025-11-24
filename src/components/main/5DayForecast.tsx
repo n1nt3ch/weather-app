@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from "react-redux";
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
@@ -48,12 +48,14 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   const currentPressure = useSelector((state: RootState) => state.settings.selectedPressure)
   
   const { data: forecastData, isLoading, error } = useGet5DayForecastQuery({ lat, lon });
-  
-  const styles = {
-    cardBg: cn(currentTheme === 'light' ? '' : ''),
-    tempMin: cn(currentTheme === 'light' ? '' : ''),
-    weatherData: cn(currentTheme === 'light' ? '' : ''),
-  }
+
+  useEffect(() => {
+    if (selectedDay) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'scroll'
+    }
+  }, [selectedDay])
 
   const getDayName = (date: Date): string => {
     if (isToday(date)) return 'Сегодня';
@@ -168,12 +170,12 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       wrapper: cn(currentTheme === 'light' ? 'bg-blue-100/50': 'bg-neutral-800/50'),
       cardWrapper: cn(currentTheme === 'light' ? 'bg-blue-300/50' : 'bg-neutral-950/50 '),
       temp: cn(currentTheme === 'light' ? 'text-neutral-800' : 'text-neutral-200 '),
+      feelsTemp: cn(currentTheme === 'light' ? 'text-neutral-600' : 'text-neutral-400 '),
       weatherData: cn(currentTheme === 'light' ? 'text-neutral-700' : 'text-neutral-300'),
     }
 
     return (
-      <div 
-        className="fixed inset-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-center z-50 p-4">
+      <div className="fixed inset-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-center z-50 p-4">
         <div className={`${styles.wrapper} flex flex-col gap-4 rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto`}>
           <div className="flex justify-between items-center">
             <h3 className="text-xl font-semibold">Почасовой прогноз на <span className='font-bold'>{dayName.toLowerCase()}</span></h3>
@@ -184,24 +186,27 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
               <X size={24} />
             </button>
           </div>
-          <Carousel className='w-full px-6 py-4 rounded-2xl'>
+          <Carousel className='w-full px-6 rounded-2xl'>
             <CarouselContent className='pl-4 w-full gap-2'>
               {hours.map((hour: any) => { 
-                  console.log(pressureConvertation(hour.main.pressure, currentPressure))
+                  console.log(hour)
 
                 const rain = hour.rain ? hour.rain['3h'] : null;
                 const snow = hour.snow ? hour.snow['3h'] : null;
 
                 return (
-                  <CarouselItem key={hour.dt} className={`${styles.cardWrapper} day-section flex flex-col justify-center items-center gap-2 rounded-lg transition-colors p-2 max-w-30`}>
+                  <CarouselItem key={hour.dt} className={`${styles.cardWrapper} day-section flex flex-col justify-center items-center gap-2 rounded-lg transition-colors p-2 max-w-35`}>
                     <div className="font-medium">{hour.time}</div>
                     <img 
                       src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
                       alt={hour.weather[0].description}
                       className="weather-icon mx-auto w-12 h-12"
                     />
-                    <div className={`${styles.temp} text-lg font-bold`}>{`${tempConvertation(hour.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</div>
-                    <div className="hour-details flex flex-col items-start text-sm space-y-1">
+                    <div className='flex flex-col items-center mb-1'>
+                      <p className={`${styles.temp} text-lg font-bold`}>{`${tempConvertation(hour.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</p>
+                      <p className={`${styles.feelsTemp} text-xs text-nowrap text-center`}>Ощущается как {tempConvertation(hour.main.feels_like, currentTemp)}°</p>
+                    </div>
+                    <div className="hour-details flex flex-col items-start text-sm gap-1">
                       <div className="flex gap-1 font-medium">
                         <Droplet size={12} className={`${styles.weatherData} mt-0.5`}/> 
                         <span className={styles.weatherData}>{Math.round(hour.main.humidity)}%</span>
@@ -252,7 +257,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     <>
       <Carousel className='w-full mt-8 px-6 py-4 border rounded-2xl'>
         <h3 className='text-2xl font-bold mb-2'>Прогноз на 5 дней</h3>
-        <CarouselContent className='pl-4 w-full gap-2'>
+        <CarouselContent className='pl-4 w-full gap-4'>
           {Object.entries(groupedData).map(([dateKey, dayData]) => {
             const windDirection = getWindDirection(dayData.average.wind_deg, currentTheme)
 
@@ -291,7 +296,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                 <div className="flex flex-col gap-2">
                   <div className="detail-item flex items-center gap-2">
                     <Wind size={16} className={styles.weatherData}/>
-                    <div className='flex '>
+                    <div className='flex gap-1'>
                       <span className={`${styles.weatherData} text-sm font-medium`}>{Math.round(dayData.average.wind_speed)} м/с, {windDirection.direction}</span>
                       <img src={windDirection.arrow} className='size-5' alt="" />
                     </div>
