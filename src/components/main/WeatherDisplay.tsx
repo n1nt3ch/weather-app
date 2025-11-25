@@ -14,7 +14,7 @@ export const WeatherDisplay = () => {
   })
   // const [daysCount, setDaysCount] = useState<number>(7);
 
-  console.log(weather)
+  // console.log(weather)
 
   // const currentWeatherIcon = (weatherType: string) => {
   //   switch (weatherType) {

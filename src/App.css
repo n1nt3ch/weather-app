@@ -305,19 +305,7 @@ body {
   color: #34495e;
 }
 
-.daily-average-details {
-  /* display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.75rem; */
-}
 
-.detail-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #2c3e50;
-}
 
 /* Стили для почасового прогноза */
 .hourly-section {
@@ -379,4 +367,12 @@ body {
     min-width: 90px;
     padding: 0.75rem;
   }
+}
+
+.yScrollOff {
+  overflow-y: hidden;
+}
+
+.yScrollOn {
+  overflow-y: scroll;
 }
