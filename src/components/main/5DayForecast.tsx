@@ -9,7 +9,7 @@ import { min, max } from 'lodash';
 
 import type { RootState } from "@/store";
 
-import { Wind, Droplet, CloudDrizzle, Gauge, Eye, X } from "lucide-react"
+import { Wind, Droplet, CloudDrizzle, Gauge, X } from "lucide-react"
 import {
   Carousel,
   CarouselContent,
@@ -17,7 +17,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { bgDarkTheme } from '@/lib/styles';
+// import { bgDarkTheme } from '@/lib/styles';
 import { cn } from '@/lib/utils/cn';
 
 interface Hourly5DayForecastProps {
@@ -140,25 +140,6 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     return grouped;
   };
 
-  // const getWindDirection = (degrees: number): any => {
-  //   const directions = ['С', 'СВ', 'В', 'ЮВ', 'Ю', 'ЮЗ', 'З', 'СЗ'];
-  //   const arrows = [
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtaWNvbiBsdWNpZGUtc3F1YXJlLWFycm93LXVwIj48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PHBhdGggZD0ibTE2IDEyLTQtNC00IDQiLz48cGF0aCBkPSJNMTIgMTZWOCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtaWNvbiBsdWNpZGUtc3F1YXJlLWFycm93LXVwIj48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PHBhdGggZD0ibTE2IDEyLTQtNC00IDQiLz48cGF0aCBkPSJNMTIgMTZWOCIvPjwvc3ZnPg==',
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtcmlnaHQtaWNvbiBsdWNpZGUtc3F1YXJlLWFycm93LXVwLXJpZ2h0Ij48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PHBhdGggZD0iTTggOGg4djgiLz48cGF0aCBkPSJtOCAxNiA4LTgiLz48L3N2Zz4=' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtcmlnaHQtaWNvbiBsdWNpZGUtc3F1YXJlLWFycm93LXVwLXJpZ2h0Ij48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PHBhdGggZD0iTTggOGg4djgiLz48cGF0aCBkPSJtOCAxNiA4LTgiLz48L3N2Zz4=',
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctcmlnaHQtaWNvbiBsdWNpZGUtc3F1YXJlLWFycm93LXJpZ2h0Ij48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PHBhdGggZD0iTTggMTJoOCIvPjxwYXRoIGQ9Im0xMiAxNiA0LTQtNC00Ii8+PC9zdmc+' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctcmlnaHQtaWNvbiBsdWNpZGUtc3F1YXJlLWFycm93LXJpZ2h0Ij48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PHBhdGggZD0iTTggMTJoOCIvPjxwYXRoIGQ9Im0xMiAxNiA0LTQtNC00Ii8+PC9zdmc+',
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1yaWdodC1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1yaWdodCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Im04IDggOCA4Ii8+PHBhdGggZD0iTTE2IDh2OEg4Ii8+PC9zdmc+' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1yaWdodC1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1yaWdodCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Im04IDggOCA4Ii8+PHBhdGggZD0iTTE2IDh2OEg4Ii8+PC9zdmc+',
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93biI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Ik0xMiA4djgiLz48cGF0aCBkPSJtOCAxMiA0IDQgNC00Ii8+PC9zdmc+' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93biI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Ik0xMiA4djgiLz48cGF0aCBkPSJtOCAxMiA0IDQgNC00Ii8+PC9zdmc+',
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1sZWZ0LWljb24gbHVjaWRlLXNxdWFyZS1hcnJvdy1kb3duLWxlZnQiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48cGF0aCBkPSJtMTYgOC04IDgiLz48cGF0aCBkPSJNMTYgMTZIOFY4Ii8+PC9zdmc+' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctZG93bi1sZWZ0LWljb24gbHVjaWRlLXNxdWFyZS1hcnJvdy1kb3duLWxlZnQiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48cGF0aCBkPSJtMTYgOC04IDgiLz48cGF0aCBkPSJNMTYgMTZIOFY4Ii8+PC9zdmc+', 
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctbGVmdC1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctbGVmdCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Im0xMiA4LTQgNCA0IDQiLz48cGF0aCBkPSJNMTYgMTJIOCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctbGVmdC1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctbGVmdCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Im0xMiA4LTQgNCA0IDQiLz48cGF0aCBkPSJNMTYgMTJIOCIvPjwvc3ZnPg==',
-  //       currentTheme === 'dark' ? 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmU2ZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtbGVmdC1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtbGVmdCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Ik04IDE2VjhoOCIvPjxwYXRoIGQ9Ik0xNiAxNiA4IDgiLz48L3N2Zz4=' : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtbGVmdC1pY29uIGx1Y2lkZS1zcXVhcmUtYXJyb3ctdXAtbGVmdCI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Ik04IDE2VjhoOCIvPjxwYXRoIGQ9Ik0xNiAxNiA4IDgiLz48L3N2Zz4=',
-  //     ];
-  //   const index = Math.round(degrees / 45) % 8;
-  //   return {
-  //     arrow: arrows[index],
-  //     direction: directions[index]
-  //   }
-  // };
-
   const handleDayClick = (dateKey: string) => {
     setSelectedDay(dateKey);
   };
@@ -167,13 +148,13 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     setSelectedDay(null);
   };
 
-
   const renderHourlyForecast = (hours: any[], dayName: string) => {
     const styles = {
       wrapper: cn(currentTheme === 'light' ? 'bg-blue-100/50': 'bg-neutral-800/50'),
       cardWrapper: cn(currentTheme === 'light' ? 'bg-blue-300/50' : 'bg-neutral-950/50 '),
       temp: cn(currentTheme === 'light' ? 'text-neutral-800' : 'text-neutral-200 '),
       feelsTemp: cn(currentTheme === 'light' ? 'text-neutral-600' : 'text-neutral-400 '),
+      windGust: cn(currentTheme === 'light' ? 'text-neutral-500' : 'text-neutral-400'),
       weatherData: cn(currentTheme === 'light' ? 'text-neutral-700' : 'text-neutral-300'),
     }
 
@@ -192,8 +173,8 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
           <Carousel className='w-full px-6 rounded-2xl'>
             <CarouselContent className='pl-4 w-full gap-2'>
               {hours.map((hour: any) => { 
-                  console.log(hour)
-
+                  // console.log(hour)
+                const windDirection = getWindDirection(hour.wind.deg, currentTheme)
                 const rain = hour.rain ? hour.rain['3h'] : null;
                 const snow = hour.snow ? hour.snow['3h'] : null;
 
@@ -214,9 +195,15 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                         <Droplet size={12} className={`${styles.weatherData} mt-0.5`}/> 
                         <span className={styles.weatherData}>{Math.round(hour.main.humidity)}%</span>
                       </div>
-                      <div className="flex gap-1 font-medium">
-                        <Wind size={12} className={`${styles.weatherData} mt-0.5`}/> 
-                        <span className={styles.weatherData}>{Math.round(hour.wind.speed)} м/с</span>
+                      <div className="flex flex-col font-medium">
+                        <div className='flex gap-1'>
+                          <Wind size={12} className={`${styles.weatherData} mt-0.5`}/> 
+                          <div className='flex'>
+                            <span className={styles.weatherData}>{Math.round(hour.wind.speed)} м/с, {windDirection.direction}</span>
+                            <img src={windDirection.arrow} className='size-4' alt="" />
+                          </div>
+                        </div>
+                        <p className={`${styles.windGust} text-[0.635] font-bold`}>Порывы до {Math.round(hour.wind.gust)} м/с</p>
                       </div>
                       <div className="flex gap-1 font-medium">
                         <Gauge size={12} className={`${styles.weatherData} mt-0.5`}/>

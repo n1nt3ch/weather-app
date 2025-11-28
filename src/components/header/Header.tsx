@@ -64,11 +64,9 @@ const Header = () => {
   return (
     <header className="sticky top-0 border-b z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between">
-        <Link to={'/'}>
           <img src={isDark ? 'src/context/icons/weather-logo(dark).png' : 'src/context/icons/weather-logo(light).png'} 
           alt="Weather app logo" 
           className="h-14"/>
-        </Link>
         <WeatherInput/>
         {weatherError && 
           <Alert onClick={() => dispatch(clearQueryError())} variant="destructive" 
