@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { capitalize, getCityTime, CurrentDate, tempConvertation } from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
+import { StaticDaylightCard } from "./StaticDaylightCard"
+import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning } from "lucide-react"
 
 import type { RootState } from "@/store"
 
@@ -11,31 +13,46 @@ export const WeatherDisplay = () => {
   const currentCity = useSelector((state: RootState) => state.city.selectedCity)
   const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
   const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
+    skip: !currentCity,
   })
   // const [daysCount, setDaysCount] = useState<number>(7);
 
-  // console.log(weather)
+  // console.log(weather?.weather['0'].id)
+  console.log( localTime.split(':').join(''))
 
-  // const currentWeatherIcon = (weatherType: string) => {
-  //   switch (weatherType) {
-  //     case 'Thunderstorm':
-  //       return '';
-  //     case 'Drizzle':
-  //       return '';
-  //     case 'Rain':
-  //       return '';
-  //     case 'Snow':
-  //       return '';
-  //     case 'Atmosphere':
-  //       return '';
-  //     case 'Clear':
-  //       return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXN1bi1pY29uIGx1Y2lkZS1zdW4iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjQiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtNC45MyA0LjkzIDEuNDEgMS40MSIvPjxwYXRoIGQ9Im0xNy42NiAxNy42NiAxLjQxIDEuNDEiLz48cGF0aCBkPSJNMiAxMmgyIi8+PHBhdGggZD0iTTIwIDEyaDIiLz48cGF0aCBkPSJtNi4zNCAxNy42Ni0xLjQxIDEuNDEiLz48cGF0aCBkPSJtMTkuMDcgNC45My0xLjQxIDEuNDEiLz48L3N2Zz4=';
-  //     case 'Clouds':
-  //       return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNsb3VkeS1pY29uIGx1Y2lkZS1jbG91ZHkiPjxwYXRoIGQ9Ik0xNy41IDIxSDlhNyA3IDAgMSAxIDYuNzEtOWgxLjc5YTQuNSA0LjUgMCAxIDEgMCA5WiIvPjxwYXRoIGQ9Ik0yMiAxMGEzIDMgMCAwIDAtMy0zaC0yLjIwN2E1LjUwMiA1LjUwMiAwIDAgMC0xMC43MDIuNSIvPjwvc3ZnPg==';
-  //     default: 
-  //       return;
-  //   }
-  // }
+  const currentWeatherIcon = (weatherDesc: string, size: number) => {
+    switch (weatherDesc) {
+      case 'Thunderstorm':
+        return (
+          <CloudLightning size={size}/>
+        )
+      case 'Drizzle':
+        return (
+          <CloudDrizzle size={size}/>
+        )
+      case 'Rain':
+        return (
+          <CloudRain size={size}/>
+        )
+      case 'Snow':
+        return (
+          <CloudSnow size={size}/>
+        )
+      case 'Clear':
+        return (
+          <Sun size={size}/>
+        )
+      case 'Clouds':
+        return (
+          <Cloudy size={size}/>
+        )
+      default: 
+        return;
+    }
+  }
+
+  const sunrise = weather?.sys.sunrise
+  const sunset = weather?.sys.sunset
 
   useEffect(() => {
     if (!weather) return;
@@ -56,9 +73,13 @@ export const WeatherDisplay = () => {
 
       {weather && (
         <div className="pt-4">
-          <div className="flex justify-between border rounded-2xl py-8 pl-6">
-            <div className="flex flex-col gap-60">
+          <div className="flex justify-between border rounded-2xl py-8 px-12 relative">
+            {/* <div className="absolute top-1/2 left-40 transform -translate-x-1/2 -translate-y-1/2">
+              <StaticDaylightCard sunrise={sunrise} sunset={sunset}/>
+            </div> */}
+            <div className="flex flex-col gap-10">
               <h1 className="text-5xl">{capitalize(weather.weather[0].description)}</h1>
+              <div className="max-w-70"><StaticDaylightCard sunrise={sunrise} sunset={sunset}/></div>
               <div className="flex flex-col content-between">
                 <span className="text-6xl font-medium">{`${tempConvertation(weather.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</span>
                 <span className="text-2xl">
@@ -67,11 +88,12 @@ export const WeatherDisplay = () => {
               </div>
             </div>
             <div className="flex items-center">
-              <img
-                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+              {/* <img
+                src={currentWeatherIcon(weather.weather[0].main)}
                 alt={weather.weather[0].description}
-                className="size-50"
-              />
+                className="size-50 mr-10"
+              /> */}
+              {currentWeatherIcon(weather.weather[0].main, 250)}
             </div>
           </div>
           <Hourly5DayForecast

@@ -250,6 +250,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
         <CarouselContent className='pl-4 w-full gap-4'>
           {Object.entries(groupedData).map(([dateKey, dayData]) => {
             const windDirection = getWindDirection(dayData.average.wind_deg, currentTheme)
+            console.log(dayData)
 
             const styles = {
               cardWrapper: cn(currentTheme === 'light' ? 'bg-blue-100 hover:bg-blue-200 hover:shadow-neutral-700' : 'bg-neutral-800 hover:bg-neutral-900 hover:shadow-neutral-500'),
