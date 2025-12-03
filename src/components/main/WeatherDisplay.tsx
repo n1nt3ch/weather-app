@@ -1,7 +1,7 @@
 import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { capitalize, getCityTime, CurrentDate, tempConvertation } from "@/lib/utils/otherFunc"
+import { capitalize, getCityTime, CurrentDate, tempConvertation, formatTime } from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
 import { StaticDaylightCard } from "./StaticDaylightCard"
 import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning } from "lucide-react"
@@ -18,7 +18,14 @@ export const WeatherDisplay = () => {
   // const [daysCount, setDaysCount] = useState<number>(7);
 
   // console.log(weather?.weather['0'].id)
-  console.log( localTime.split(':').join(''))
+  const sunrise = weather?.sys.sunrise
+  const sunset = weather?.sys.sunset
+
+  const sunriseForIcons = formatTime(weather?.sys.sunrise).split(':').join('')
+  const sunsetForIcons = formatTime(weather?.sys.sunset).split(':').join('')
+  const currentTimeForIcons = localTime.split(':').join('')
+
+  // console.log( localTime.split(':').join(''))
 
   const currentWeatherIcon = (weatherDesc: string, size: number) => {
     switch (weatherDesc) {
@@ -50,9 +57,6 @@ export const WeatherDisplay = () => {
         return;
     }
   }
-
-  const sunrise = weather?.sys.sunrise
-  const sunset = weather?.sys.sunset
 
   useEffect(() => {
     if (!weather) return;

@@ -29,6 +29,11 @@ export const getCityTime = (timezoneOffset: number): Date => {
   return new Date(utc + (timezoneOffset * 1000));
 };
 
+export const formatTime = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000);
+  return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+};
+
 export const CurrentDate = () => {
   const now = new Date();
   

@@ -1,20 +1,16 @@
 import { Sunrise, Sunset } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { cn } from '@/lib/utils/cn';
+import { formatTime } from '@/lib/utils/otherFunc';
 import type { RootState } from '@/store';
 
 interface StaticDaylightCardProps {
-  sunrise: number | void; // Unix timestamp в секундах
-  sunset: number | void; // Unix timestamp в секундах
+  sunrise: number // Unix timestamp в секундах
+  sunset: number // Unix timestamp в секундах
 }
 
 export const StaticDaylightCard = ({ sunrise, sunset }: StaticDaylightCardProps) => {
   const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
-  // Преобразование Unix timestamp в формат "HH:MM"
-  const formatTime = (timestamp: number): string => {
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-  };
 
   // Расчёт длительности светового дня
   const daylightMinutes = Math.floor((sunset - sunrise) / 60);
