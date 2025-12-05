@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { capitalize, getCityTime, CurrentDate, tempConvertation, formatTime } from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
 import { StaticDaylightCard } from "./StaticDaylightCard"
-import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning } from "lucide-react"
+import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon } from "lucide-react"
 
 import type { RootState } from "@/store"
 
@@ -21,10 +21,10 @@ export const WeatherDisplay = () => {
   const sunrise = weather?.sys.sunrise
   const sunset = weather?.sys.sunset
 
-  const sunriseForIcons = formatTime(weather?.sys.sunrise).split(':').join('')
-  const sunsetForIcons = formatTime(weather?.sys.sunset).split(':').join('')
-  const currentTimeForIcons = localTime.split(':').join('')
-
+  const sunriseForIcons = Number(formatTime(weather?.sys.sunrise).split(':').join(''))
+  const sunsetForIcons = Number(formatTime(weather?.sys.sunset).split(':').join(''))
+  const currentTimeForIcons = Number(localTime.split(':').join(''))
+  
   // console.log( localTime.split(':').join(''))
 
   const currentWeatherIcon = (weatherDesc: string, size: number) => {
@@ -46,9 +46,10 @@ export const WeatherDisplay = () => {
           <CloudSnow size={size}/>
         )
       case 'Clear':
-        return (
-          <Sun size={size}/>
-        )
+        // return (
+        //   <Sun size={size}/>
+        // )
+        return (sunriseForIcons < currentTimeForIcons < sunsetForIcons) ? (<Sun size={size}/>) : (<Moon size={size}/>);
       case 'Clouds':
         return (
           <Cloudy size={size}/>
