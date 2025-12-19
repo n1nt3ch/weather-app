@@ -34,7 +34,7 @@ export const getCityTime = (timezoneOffset: number): Date => {
 export const formatSunriseSunsetFromWeather = (weather: WeatherData): {
   sunriseTime: string;
   sunsetTime: string;
-  timezoneOffsetHours: number;
+  // timezoneOffsetHours: number;
 } => {
   // const { sunrise, sunset } = weather.sys;
   // const { timezone } = weather.timezone;
@@ -48,12 +48,12 @@ export const formatSunriseSunsetFromWeather = (weather: WeatherData): {
   const sunsetTime = sunsetDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 
   // Возвращаем также смещение в часах для информации
-  const timezoneOffsetHours = weather?.timezone / 3600;
+  // const timezoneOffsetHours = weather?.timezone / 3600;
 
   return {
     sunriseTime,
     sunsetTime,
-    timezoneOffsetHours,
+    // timezoneOffsetHours,
   };
 }
 
