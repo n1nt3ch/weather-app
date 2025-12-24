@@ -17,7 +17,7 @@ export const WeatherDisplay = () => {
   })
   const sunrise = weather?.sys.sunrise
   const sunset = weather?.sys.sunset
-  console.log(weather)
+  // console.log(weather)
 
   const {sunriseTime, sunsetTime } = formatSunriseSunsetFromWeather(weather);
   const [sunriseHours, sunriseMinutes] = sunriseTime.split(':');

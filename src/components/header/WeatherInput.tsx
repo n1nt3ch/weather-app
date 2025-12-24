@@ -1,11 +1,12 @@
 import { useState, useCallback, useEffect, type FormEvent } from "react"
 import { useDispatch, useSelector } from 'react-redux'
 import { cn } from "@/lib/utils/cn"
-// import { debounce } from 'lodash'
+import { debounce, values } from 'lodash'
 
 import { setCity, clearCity } from '@/store/slices/weatherSlices/currentCitySlice'
 import { setQueryError, clearQueryError } from "@/store/slices/weatherSlices/currentQueryError"
 import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
+import { useSearchCitiesQuery } from "@/store/api/geoApi/geoApi"
 
 import { Button } from '../ui/button'
 import { Input } from "../ui/input"
@@ -19,11 +20,19 @@ import type { SerializedError } from '@reduxjs/toolkit'
 const WeatherInput = () => {
   const [inputCity, setInputCity] = useState<string>('')
   const [queryCity, setQueryCity] = useState<string>('')
-
+  const [debouncedInput, setDebouncedInput] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   // const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
 
   const dispatch = useDispatch<AppDispatch>()
-  const [getCurrentQueryWeather] = useLazyGetCurrentWeatherQuery() 
+  const [getCurrentQueryWeather] = useLazyGetCurrentWeatherQuery()
+  
+  const { data, isFetching, error } = useSearchCitiesQuery(
+    { q: debouncedInput, limit: 10 },
+    { skip: !debouncedInput.trim() } // не делать запрос, если нет ввода
+  );
+
+  console.log(debouncedInput)
     
   const getErrorMessage = (error: FetchBaseQueryError | SerializedError | undefined): string => {
     if (!error) return ''
@@ -63,6 +72,10 @@ const WeatherInput = () => {
       }
     }
   }, [inputCity])
+
+  const autocompleteInput = cn(
+    'm-0 p-0 z-100 w-71 top-14 rounded absolute px-1 bg-white text-xs'
+  )
   
   const handleEditCity = () => {
     setQueryCity('')
@@ -70,11 +83,20 @@ const WeatherInput = () => {
     dispatch(clearCity())
   }
 
+  const debouncedSetInput = useCallback(
+    debounce((value) => {
+      setDebouncedInput(value)
+    }, 
+    300), []
+  )
+
   useEffect(() => {
     if (inputCity.length === 0) {
       dispatch(clearQueryError())
     }
-  }, [inputCity])
+
+    debouncedSetInput(inputCity)
+  }, [inputCity, debouncedSetInput])
 
   if (queryCity) {
     return (
@@ -110,9 +132,69 @@ const WeatherInput = () => {
             dispatch(clearCity())
             dispatch(clearQueryError())
           }}
+          onFocus={() => setShowSuggestions(true)}
           placeholder="Введите город..."
           className="border p-2 rounded"
         />
+        
+        {/* {isFetching && <p>Поиск...</p>} */}
+        {error && <p style={{ color: 'red' }}>Ошибка: {(error as any).status}</p>}
+
+        {showSuggestions && data && data.length > 0 && (
+          <ul
+            className={`${autocompleteInput} border-neutral-300 border-1 bg-white`}
+            style={{
+              // position: 'absolute',
+              // top: '60px',
+              // left: '20px',
+              // width: '316px',
+              // border: '1px solid #ccc',
+              // backgroundColor: 'white',
+              // maxHeight: '206px',
+              // overflow: 'auto',
+              // zIndex: 1000,
+              // margin: 0,
+              // padding: 0,
+            }}
+          >
+            {data.map((city, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  setInputCity(city.name);
+                  setShowSuggestions(false);
+                  dispatch(setCity(city.name))
+                }}
+                style={{
+                  padding: '8px',
+                  cursor: 'pointer',
+                  borderBottom: '1px solid #eee',
+                }}
+              >
+                {city.name}, {city.country} {city.state && `(${city.state})`}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {showSuggestions && data && data.length === 0 && !isFetching && (
+          <div
+            className={`${autocompleteInput} py-2 border-neutral-300 border-1 `}
+            style={{
+              // position: 'absolute',
+              // top: '60px',
+              // left: '20px',
+              // width: '316px',
+              // border: '1px solid #ccc',
+              // backgroundColor: 'white',
+              // padding: '8px',
+              // zIndex: 1000,
+            }}
+          >
+            Нет совпадений
+          </div>
+        )}
+
         <Button 
           type="submit"
           className={cn(buttonAnimation, "p-3 rounded cursor-pointer")}
