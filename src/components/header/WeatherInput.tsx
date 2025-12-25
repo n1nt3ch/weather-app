@@ -28,7 +28,7 @@ const WeatherInput = () => {
   const [getCurrentQueryWeather] = useLazyGetCurrentWeatherQuery()
   
   const { data, isFetching, error } = useSearchCitiesQuery(
-    { q: debouncedInput, limit: 10 },
+    { q: debouncedInput, limit: 15 },
     { skip: !debouncedInput.trim() } // не делать запрос, если нет ввода
   );
 
@@ -87,7 +87,7 @@ const WeatherInput = () => {
     debounce((value) => {
       setDebouncedInput(value)
     }, 
-    300), []
+    150), []
   )
 
   useEffect(() => {
@@ -95,8 +95,18 @@ const WeatherInput = () => {
       dispatch(clearQueryError())
     }
 
+    if (debouncedInput.trim()) {
+      setShowSuggestions(true)
+    }
+
+    if (!inputCity.trim()) {
+      setShowSuggestions(false)
+    }
+
     debouncedSetInput(inputCity)
-  }, [inputCity, debouncedSetInput])
+  }, [inputCity])
+
+  console.log(showSuggestions)
 
   if (queryCity) {
     return (
@@ -141,22 +151,7 @@ const WeatherInput = () => {
         {error && <p style={{ color: 'red' }}>Ошибка: {(error as any).status}</p>}
 
         {showSuggestions && data && data.length > 0 && (
-          <ul
-            className={`${autocompleteInput} border-neutral-300 border-1 bg-white`}
-            style={{
-              // position: 'absolute',
-              // top: '60px',
-              // left: '20px',
-              // width: '316px',
-              // border: '1px solid #ccc',
-              // backgroundColor: 'white',
-              // maxHeight: '206px',
-              // overflow: 'auto',
-              // zIndex: 1000,
-              // margin: 0,
-              // padding: 0,
-            }}
-          >
+          <ul className={`${autocompleteInput} border-neutral-300 border-1 bg-white`}>
             {data.map((city, index) => (
               <li
                 key={index}
@@ -165,11 +160,7 @@ const WeatherInput = () => {
                   setShowSuggestions(false);
                   dispatch(setCity(city.name))
                 }}
-                style={{
-                  padding: '8px',
-                  cursor: 'pointer',
-                  borderBottom: '1px solid #eee',
-                }}
+                className="p-2 cursor-pointer border-b-1"
               >
                 {city.name}, {city.country} {city.state && `(${city.state})`}
               </li>
@@ -178,19 +169,7 @@ const WeatherInput = () => {
         )}
 
         {showSuggestions && data && data.length === 0 && !isFetching && (
-          <div
-            className={`${autocompleteInput} py-2 border-neutral-300 border-1 `}
-            style={{
-              // position: 'absolute',
-              // top: '60px',
-              // left: '20px',
-              // width: '316px',
-              // border: '1px solid #ccc',
-              // backgroundColor: 'white',
-              // padding: '8px',
-              // zIndex: 1000,
-            }}
-          >
+          <div className={`${autocompleteInput} py-2 border-neutral-300 border-1 `}>
             Нет совпадений
           </div>
         )}

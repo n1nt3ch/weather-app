@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
 import { capitalize, getCityTime, CurrentDate, tempConvertation, formatSunriseSunsetFromWeather } from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
-import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, Sunrise, Sunset } from "lucide-react"
+import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, Sunrise, Sunset, CloudFog } from "lucide-react"
 
 import type { RootState } from "@/store"
 import { cn } from "@/lib/utils/cn"
@@ -17,7 +17,7 @@ export const WeatherDisplay = () => {
   })
   const sunrise = weather?.sys.sunrise
   const sunset = weather?.sys.sunset
-  // console.log(weather)
+  console.log(weather)
 
   const {sunriseTime, sunsetTime } = formatSunriseSunsetFromWeather(weather);
   const [sunriseHours, sunriseMinutes] = sunriseTime.split(':');
@@ -55,6 +55,10 @@ export const WeatherDisplay = () => {
       case 'Clouds':
         return (
           <Cloudy size={size}/>
+        )
+      case 'Mist':
+        return (
+          <CloudFog size={size}/>
         )
       default: 
         return;
