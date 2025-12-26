@@ -14,3 +14,7 @@ export const themeButtonAnimation = cn(
 export const bgDarkTheme = cn(
   'background-color: #161617'
 )
+
+export const autocompleteInput = cn(
+  'm-0 p-0 z-100 w-71 top-14 rounded absolute px-1 bg-white text-xs border-neutral-300 border-1'
+)

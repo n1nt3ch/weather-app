@@ -10,7 +10,7 @@ import { useSearchCitiesQuery } from "@/store/api/geoApi/geoApi"
 
 import { Button } from '../ui/button'
 import { Input } from "../ui/input"
-import { buttonAnimation } from "@/lib/styles"
+import { buttonAnimation, autocompleteInput } from "@/lib/styles"
 import { MapPin } from "lucide-react"
 
 import type { AppDispatch, RootState } from '@/store'
@@ -72,10 +72,6 @@ const WeatherInput = () => {
       }
     }
   }, [inputCity])
-
-  const autocompleteInput = cn(
-    'm-0 p-0 z-100 w-71 top-14 rounded absolute px-1 bg-white text-xs'
-  )
   
   const handleEditCity = () => {
     setQueryCity('')
@@ -151,25 +147,30 @@ const WeatherInput = () => {
         {error && <p style={{ color: 'red' }}>Ошибка: {(error as any).status}</p>}
 
         {showSuggestions && data && data.length > 0 && (
-          <ul className={`${autocompleteInput} border-neutral-300 border-1 bg-white`}>
-            {data.map((city, index) => (
+          <ul className={autocompleteInput}>
+            {data.map((city, index) => {
+              
+              console.log(city)
+              return (
               <li
                 key={index}
                 onClick={() => {
                   setInputCity(city.name);
+                  setDebouncedInput('')
                   setShowSuggestions(false);
                   dispatch(setCity(city.name))
                 }}
                 className="p-2 cursor-pointer border-b-1"
               >
-                {city.name}, {city.country} {city.state && `(${city.state})`}
+                {city.name === 'RU' ? city.local_names?.ru : city.name}, {city.country} 
+                {/* {city.state && `(${city.state})`} */}
               </li>
-            ))}
+            )})}
           </ul>
         )}
 
         {showSuggestions && data && data.length === 0 && !isFetching && (
-          <div className={`${autocompleteInput} py-2 border-neutral-300 border-1 `}>
+          <div className={`${autocompleteInput} py-2`}>
             Нет совпадений
           </div>
         )}
