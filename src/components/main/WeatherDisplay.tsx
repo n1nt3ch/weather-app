@@ -7,6 +7,7 @@ import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, 
 
 import type { RootState } from "@/store"
 import { cn } from "@/lib/utils/cn"
+// import { TimeDisplay } from "./TimeDisplay"
 
 export const WeatherDisplay = () => {
   const [localTime, setLocalTime] = useState('');
@@ -17,7 +18,7 @@ export const WeatherDisplay = () => {
   })
   const sunrise = weather?.sys.sunrise
   const sunset = weather?.sys.sunset
-  console.log(weather)
+  // console.log(weather)
 
   const {sunriseTime, sunsetTime } = formatSunriseSunsetFromWeather(weather);
   const [sunriseHours, sunriseMinutes] = sunriseTime.split(':');

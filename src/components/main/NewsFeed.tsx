@@ -2,7 +2,7 @@
 import { useGetTopHeadlinesQuery, useGetNewsByQueryQuery } from "@/store/api/newsApi/newsApi";
 
 export const NewsFeed = () => {
-  const { data, error, isLoading } = useGetTopHeadlinesQuery({ country: 'ru', category: 'business', language: 'ru' }); // 🔥 изменено
+  const { data, error, isLoading } = useGetTopHeadlinesQuery({ country: '', category: '', language: '' }); // 🔥 изменено
 
   if (isLoading) return <div>Загрузка новостей...</div>;
   if (error) {

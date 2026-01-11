@@ -16,5 +16,9 @@ export const bgDarkTheme = cn(
 )
 
 export const autocompleteInput = cn(
-  'm-0 p-0 z-100 w-71 top-14 rounded absolute px-1 bg-white text-xs border-neutral-300 border-1'
+  'm-0 p-0 z-100 w-71 top-14 rounded absolute px-1 text-xs border-neutral-300 border-1'
+)
+
+export const autocompleteInputDark = cn(
+  'bg-neutral-800'
 )

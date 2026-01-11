@@ -36,11 +36,11 @@ import {
 import { clearQueryError } from "@/store/slices/weatherSlices/currentQueryError.ts"
 
 import WeatherInput from './WeatherInput.tsx'
+import { isDark } from "@/lib/utils/otherFunc.ts"
 import { buttonAnimation } from "@/lib/styles.ts"
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
-  const isDark = theme === 'dark';
   const dispatch = useDispatch<AppDispatch>()
 
   const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)

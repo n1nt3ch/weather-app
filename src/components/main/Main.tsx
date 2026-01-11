@@ -8,7 +8,7 @@ const Main = () => {
       <div className="min-h-screen ">
           <WeatherDisplay />
           {/* <RainViewerMap /> */}
-          <NewsFeed></NewsFeed>
+          {/* <NewsFeed></NewsFeed> */}
       </div>
     </div>
   )

@@ -114,3 +114,5 @@ export const pressureConvertation = (value: number, pressureUnit: string) => {
   const hpaToMm = value / 1.333;
   return pressureUnit === 'hpa' ? `${Math.round(value)} гПа` : `${Math.round(hpaToMm)} мм.рт.ст`
 };
+
+export const isDark = (theme: string) => theme === 'dark';

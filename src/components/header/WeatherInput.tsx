@@ -3,19 +3,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { cn } from "@/lib/utils/cn"
 import { debounce, values } from 'lodash'
 
-import { setCity, clearCity } from '@/store/slices/weatherSlices/currentCitySlice'
+import { setCity, clearCity, currentCity } from '@/store/slices/weatherSlices/currentCitySlice'
 import { setQueryError, clearQueryError } from "@/store/slices/weatherSlices/currentQueryError"
 import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 import { useSearchCitiesQuery } from "@/store/api/geoApi/geoApi"
 
 import { Button } from '../ui/button'
 import { Input } from "../ui/input"
-import { buttonAnimation, autocompleteInput } from "@/lib/styles"
+import { buttonAnimation, autocompleteInput, autocompleteInputDark } from "@/lib/styles"
 import { MapPin } from "lucide-react"
 
 import type { AppDispatch, RootState } from '@/store'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import type { SerializedError } from '@reduxjs/toolkit'
+import { isDark } from "@/lib/utils/otherFunc"
 
 const WeatherInput = () => {
   const [inputCity, setInputCity] = useState<string>('')
@@ -32,7 +33,10 @@ const WeatherInput = () => {
     { skip: !debouncedInput.trim() } // не делать запрос, если нет ввода
   );
 
-  console.log(debouncedInput)
+  const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
+
+  // console.log(debouncedInput)
+  // console.log(showSuggestions)
     
   const getErrorMessage = (error: FetchBaseQueryError | SerializedError | undefined): string => {
     if (!error) return ''
@@ -95,14 +99,12 @@ const WeatherInput = () => {
       setShowSuggestions(true)
     }
 
-    if (!inputCity.trim()) {
+    if (inputCity.trim().length === 0) {
       setShowSuggestions(false)
     }
 
     debouncedSetInput(inputCity)
   }, [inputCity])
-
-  console.log(showSuggestions)
 
   if (queryCity) {
     return (
@@ -138,7 +140,7 @@ const WeatherInput = () => {
             dispatch(clearCity())
             dispatch(clearQueryError())
           }}
-          onFocus={() => setShowSuggestions(true)}
+          // onFocus={() => setShowSuggestions(true)}
           placeholder="Введите город..."
           className="border p-2 rounded"
         />
@@ -149,8 +151,7 @@ const WeatherInput = () => {
         {showSuggestions && data && data.length > 0 && (
           <ul className={autocompleteInput}>
             {data.map((city, index) => {
-              
-              console.log(city)
+              // console.log(city)
               return (
               <li
                 key={index}
@@ -160,7 +161,7 @@ const WeatherInput = () => {
                   setShowSuggestions(false);
                   dispatch(setCity(city.name))
                 }}
-                className="p-2 cursor-pointer border-b-1"
+                className={`${isDark(currentTheme) ? autocompleteInputDark : null} p-2 cursor-pointer border-b-1`}
               >
                 {city.name === 'RU' ? city.local_names?.ru : city.name}, {city.country} 
                 {/* {city.state && `(${city.state})`} */}
@@ -170,14 +171,18 @@ const WeatherInput = () => {
         )}
 
         {showSuggestions && data && data.length === 0 && !isFetching && (
-          <div className={`${autocompleteInput} py-2`}>
+          <div className={`
+            ${isDark(currentTheme) ? autocompleteInputDark : null} 
+            ${autocompleteInput}
+            py-2`}
+          >
             Нет совпадений
           </div>
         )}
 
         <Button 
           type="submit"
-          className={cn(buttonAnimation, "p-3 rounded cursor-pointer")}
+          className={`${buttonAnimation} p-3 rounded cursor-pointer`}
           disabled={!inputCity.trim()}
         >
           Найти
