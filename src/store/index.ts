@@ -7,12 +7,14 @@ import { newsApi } from './api/newsApi/newsApi'
 import currentCitySlice from './slices/weatherSlices/currentCitySlice'
 import currentQueryError from './slices/weatherSlices/currentQueryError'
 import currentSettingsSlice from './slices/settingsSlice'
+import currentDayPart  from './slices/partOfTheDaySlice'
 
 export const store = configureStore({
   reducer: {
     city: currentCitySlice,
     queryError: currentQueryError,
     settings: currentSettingsSlice,
+    dayPart: currentDayPart,
     [weatherApi.reducerPath]: weatherApi.reducer,
     [forecastApi.reducerPath]: forecastApi.reducer,
     [rainApi.reducerPath]: rainApi.reducer,

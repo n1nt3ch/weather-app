@@ -1,11 +1,12 @@
 import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
-import { useState, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { setDayPart, setNightPart } from "@/store/slices/partOfTheDaySlice"
+import { useState, useEffect, type ReactElement } from "react"
+import { useSelector, useDispatch } from "react-redux"
 import { capitalize, getCityTime, CurrentDate, tempConvertation, formatSunriseSunsetFromWeather } from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
 import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, Sunrise, Sunset, CloudFog } from "lucide-react"
 
-import type { RootState } from "@/store"
+import type { AppDispatch, RootState } from "@/store"
 import { cn } from "@/lib/utils/cn"
 // import { TimeDisplay } from "./TimeDisplay"
 
@@ -13,9 +14,13 @@ export const WeatherDisplay = () => {
   const [localTime, setLocalTime] = useState('');
   const currentCity = useSelector((state: RootState) => state.city.selectedCity)
   const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
+  const currentDayPart = useSelector((state: RootState) => state.dayPart.currentPart)
   const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
     skip: !currentCity,
   })
+
+  const dispatch = useDispatch<AppDispatch>()
+
   const sunrise = weather?.sys.sunrise
   const sunset = weather?.sys.sunset
   // console.log(weather)
@@ -24,15 +29,28 @@ export const WeatherDisplay = () => {
   const [sunriseHours, sunriseMinutes] = sunriseTime.split(':');
   const [sunsetHours, sunsetMinutes] = sunsetTime.split(':');
 
-  const sunriseForIcons = Number((sunriseTime).split(':').join(''))
-  const sunsetForIcons = Number((sunsetTime).split(':').join(''))
+  const sunriseForIcons = Number(`${sunriseHours - 3}${sunriseMinutes}`)
+  const sunsetForIcons = Number(`${sunsetHours - 3}${sunsetMinutes}`)
   const currentTimeForIcons = Number(localTime.split(':').join(''))
+  // console.log(`рассвет ${sunriseForIcons}`)
+  // console.log(`текущее время ${currentTimeForIcons}`)
+  // console.log(`закат ${sunsetForIcons}`)
+
+  useEffect(() => {
+    if(currentTimeForIcons === 0) return;
+    if (sunriseForIcons < currentTimeForIcons && currentTimeForIcons < sunsetForIcons) {
+      dispatch(setDayPart())
+    } else {
+      dispatch(setNightPart())
+    }
+  }, [currentTimeForIcons])
   
+  // console.log(currentDayPart)
   // console.log( localTime.split(':').join(''))
 
   const currentWeatherIcon = (weatherDesc: string, size: number) => {
     switch (weatherDesc) {
-      case 'Thunderstorm':
+      case 'Thunderstorm': 
         return (
           <CloudLightning size={size}/>
         )
@@ -49,10 +67,9 @@ export const WeatherDisplay = () => {
           <CloudSnow size={size}/>
         )
       case 'Clear':
-        // return (
-        //   <Sun size={size}/>
-        // )
-        return (sunriseForIcons < currentTimeForIcons < sunsetForIcons) ? (<Sun size={size}/>) : (<Moon size={size}/>);
+        return currentDayPart === 'day' ?
+          (<Sun size={size}/>) :
+          (<Moon size={size}/>);
       case 'Clouds':
         return (
           <Cloudy size={size}/>
@@ -69,7 +86,6 @@ export const WeatherDisplay = () => {
   const StaticDaylightCard = () => {
     const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
   
-    // Расчёт длительности светового дня
     const daylightMinutes = Math.floor((sunset - sunrise) / 60);
     const hours = Math.floor(daylightMinutes / 60);
     const minutes = Math.floor(daylightMinutes % 60);

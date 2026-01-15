@@ -9,7 +9,8 @@ import { min, max } from 'lodash';
 
 import type { RootState } from "@/store";
 
-import { Wind, Droplet, CloudDrizzle, Gauge, X } from "lucide-react"
+import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, Sunrise, Sunset, CloudFog, Wind, Droplet, Gauge, X } from "lucide-react"
+
 import {
   Carousel,
   CarouselContent,
@@ -38,7 +39,7 @@ interface DailyAverage {
   visibility: number;
   precipitation: number
   description: string;
-  icon: string;
+  main: string;
 }
 
 export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon }) => {
@@ -47,6 +48,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
   const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
   const currentPressure = useSelector((state: RootState) => state.settings.selectedPressure)
+  const currentDayPart = useSelector((state: RootState) => state.dayPart.currentPart)
   
   const { data: forecastData, isLoading, error } = useGet5DayForecastQuery({ lat, lon });
 
@@ -81,19 +83,34 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       return rain + snow;
     });
 
+    // console.log(currentTheme)
+
     const weatherCounts: { [key: string]: number } = {};
     dayData.forEach(hour => {
+      // console.log(hour)
       const desc = hour.weather[0].description;
       weatherCounts[desc] = (weatherCounts[desc] || 0) + 1;
+    });
+
+    const weatherCountsMain: { [key: string]: number } = {};
+    dayData.forEach(hour => {
+      // console.log(hour)
+      const desc = hour.weather[0].main;
+      weatherCountsMain[desc] = (weatherCountsMain[desc] || 0) + 1;
     });
     
     const mostFrequentWeather = Object.keys(weatherCounts).reduce((a, b) => 
       weatherCounts[a] > weatherCounts[b] ? a : b
     );
 
-    const mostFrequentHour = dayData.find(hour => 
-      hour.weather[0].description === mostFrequentWeather
+    const mostFrequentWeatherMain = Object.keys(weatherCountsMain).reduce((a, b) => 
+      weatherCountsMain[a] > weatherCountsMain[b] ? a : b
     );
+
+
+    // const mostFrequentHour = dayData.find(hour => 
+    //   hour.weather[0].description === mostFrequentWeather
+    // );
 
     return {
       tempMin: Math.round(min(tempsMin)),
@@ -108,7 +125,8 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       visibility: Math.round(visibilities.reduce((a, b) => a + b) / visibilities.length / 1000),
       precipitation: Math.round(precipitations.reduce((a, b) => a + b) * 10) / 10,
       description: mostFrequentWeather,
-      icon: mostFrequentHour?.weather[0].icon || dayData[0].weather[0].icon
+      main: mostFrequentWeatherMain, 
+      // icon: mostFrequentHour?.weather[0].icon || dayData[0].weather[0].icon
     };
   };
 
@@ -148,6 +166,41 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     setSelectedDay(null);
   };
 
+  const currentWeatherIcon = (weatherDesc: string, size: number) => {
+    switch (weatherDesc) {
+      case 'Thunderstorm': 
+        return (
+          <CloudLightning size={size}/>
+        )
+      case 'Drizzle':
+        return (
+          <CloudDrizzle size={size}/>
+        )
+      case 'Rain':
+        return (
+          <CloudRain size={size}/>
+        )
+      case 'Snow':
+        return (
+          <CloudSnow size={size}/>
+        )
+      case 'Clear':
+        return currentDayPart === 'day' ?
+          (<Sun size={size}/>) :
+          (<Moon size={size}/>);
+      case 'Clouds':
+        return (
+          <Cloudy size={size}/>
+        )
+      case 'Mist':
+        return (
+          <CloudFog size={size}/>
+        )
+      default: 
+        return;
+    }
+  }
+
   const renderHourlyForecast = (hours: any[], dayName: string) => {
     const styles = {
       wrapper: cn(currentTheme === 'light' ? 'bg-blue-100/50': 'bg-neutral-800/50'),
@@ -181,11 +234,12 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                 return (
                   <CarouselItem key={hour.dt} className={`${styles.cardWrapper} day-section flex flex-col justify-center items-center gap-2 rounded-lg transition-colors p-2 max-w-35`}>
                     <div className="font-medium">{hour.time}</div>
-                    <img 
+                    {/* <img 
                       src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
                       alt={hour.weather[0].description}
                       className="weather-icon mx-auto w-12 h-12"
-                    />
+                    /> */}
+                    {currentWeatherIcon(hour.weather[0].main, 40)}
                     <div className='flex flex-col items-center mb-1'>
                       <p className={`${styles.temp} text-lg font-bold`}>{`${tempConvertation(hour.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</p>
                       <p className={`${styles.feelsTemp} text-xs text-nowrap text-center`}>Ощущается как {tempConvertation(hour.main.feels_like, currentTemp)}°</p>
@@ -250,7 +304,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
         <CarouselContent className='pl-4 w-full gap-4'>
           {Object.entries(groupedData).map(([dateKey, dayData]) => {
             const windDirection = getWindDirection(dayData.average.wind_deg, currentTheme)
-            // console.log(dayData)
+            // console.log(dayData.average.main)
             const styles = {
               cardWrapper: cn(currentTheme === 'light' ? 'bg-blue-100 hover:bg-blue-200 hover:shadow-neutral-700' : 'bg-neutral-800 hover:bg-neutral-900 hover:shadow-neutral-500'),
               cardInside: cn(currentTheme === 'light' ? 'bg-white' : 'bg-neutral-500'),
@@ -269,11 +323,12 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
               
               <div className={`${styles.cardInside} daily-average-card rounded-lg  p-2 flex flex-col items-center`}>
                 <div className="daily-average-header flex flex-col items-center mb-4">
-                  <img 
+                  {/* <img 
                     src={`https://openweathermap.org/img/wn/${dayData.average.icon}@2x.png`} 
                     alt={dayData.average.description}
                     className="weather-icon-large w-16 h-16"
-                  />
+                  /> */}
+                  {currentWeatherIcon(dayData.average.main, 60)}
                   <div className="daily-average-temp">
                     <div className='flex justify-center gap-6 mb-2'>
                       <span className="temp-main text-2xl font-bold">{tempConvertation(dayData.average.tempMax, currentTemp)}°</span>

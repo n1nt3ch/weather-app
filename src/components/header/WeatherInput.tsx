@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { cn } from "@/lib/utils/cn"
 import { debounce, values } from 'lodash'
 
-import { setCity, clearCity, currentCity } from '@/store/slices/weatherSlices/currentCitySlice'
+import { setCity, clearCity } from '@/store/slices/weatherSlices/currentCitySlice'
 import { setQueryError, clearQueryError } from "@/store/slices/weatherSlices/currentQueryError"
 import { useLazyGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 import { useSearchCitiesQuery } from "@/store/api/geoApi/geoApi"
 
 import { Button } from '../ui/button'
 import { Input } from "../ui/input"
-import { buttonAnimation, autocompleteInput, autocompleteInputDark } from "@/lib/styles"
+import { buttonAnimation, autocompleteInput, autocompleteInputDark, autocompleteInputLight } from "@/lib/styles"
 import { MapPin } from "lucide-react"
 
 import type { AppDispatch, RootState } from '@/store'
@@ -161,7 +161,7 @@ const WeatherInput = () => {
                   setShowSuggestions(false);
                   dispatch(setCity(city.name))
                 }}
-                className={`${isDark(currentTheme) ? autocompleteInputDark : null} p-2 cursor-pointer border-b-1`}
+                className={`${isDark(currentTheme) ? autocompleteInputDark : autocompleteInputLight} p-2 cursor-pointer border-b-1`}
               >
                 {city.name === 'RU' ? city.local_names?.ru : city.name}, {city.country} 
                 {/* {city.state && `(${city.state})`} */}
@@ -172,9 +172,9 @@ const WeatherInput = () => {
 
         {showSuggestions && data && data.length === 0 && !isFetching && (
           <div className={`
-            ${isDark(currentTheme) ? autocompleteInputDark : null} 
+            ${isDark(currentTheme) ? autocompleteInputDark : autocompleteInputLight} 
             ${autocompleteInput}
-            py-2`}
+            p-2`}
           >
             Нет совпадений
           </div>
