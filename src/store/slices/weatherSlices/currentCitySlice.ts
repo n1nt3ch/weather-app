@@ -5,7 +5,7 @@ interface CityState {
 }
 
 const initialState: CityState = {
-  selectedCity: '',
+  selectedCity: 'Казань',
 }
 
 export const currentCity = createSlice({

@@ -1,9 +1,9 @@
 import { useTheme } from "@/context/theme-provider"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from "react-router-dom"
+import { cn } from "@/lib/utils/cn.ts"
 
-import { Moon, Sun, Settings, AlertCircleIcon } from "lucide-react"
+import { Settings, AlertCircleIcon } from "lucide-react"
 import {
   Alert,
   AlertDescription,
@@ -62,7 +62,10 @@ const Header = () => {
   }, [isDark(theme), dispatch])
   
   return (
-    <header className="sticky top-0 border-b z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header 
+      className="sticky top-0 z-50  border-b border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] 
+      bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/30"
+    >
       <div className="container mx-auto flex h-16 items-center justify-between">
           <img src={isDark(theme) ? 'src/context/icons/weather-logo(dark).png' : 'src/context/icons/weather-logo(light).png'} 
           alt="Weather app logo" 
@@ -92,9 +95,6 @@ const Header = () => {
               <div className="grid gap-4">
                 <div className="space-y-2">
                   <h4 className="leading-none font-medium">Настройки</h4>
-                  {/* <p className="text-muted-foreground text-sm">
-                    Set the dimensions for the layer.
-                  </p> */}
                 </div>
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
@@ -143,16 +143,6 @@ const Header = () => {
               </div>
             </PopoverContent>
           </Popover>
-          {/* <button onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className={`flex items-center cursor-pointer transition-transform duration-500
-            ${isDark ? 'rotate-180' : 'rotate-0'}`}
-          >
-            {isDark ? (
-                <Sun className="h-6 w-6 text-yellow-500 rotate-0 transition-all"></Sun>
-              ) : (
-                <Moon className="h-6 w-6 text-blue-500 rotate-0 transition-all"></Moon>
-              )}
-          </button> */}
         </div>
       </div>
     </header>

@@ -18,7 +18,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-// import { bgDarkTheme } from '@/lib/styles';
 import { cn } from '@/lib/utils/cn';
 
 interface Hourly5DayForecastProps {
@@ -83,18 +82,14 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       return rain + snow;
     });
 
-    // console.log(currentTheme)
-
     const weatherCounts: { [key: string]: number } = {};
     dayData.forEach(hour => {
-      // console.log(hour)
       const desc = hour.weather[0].description;
       weatherCounts[desc] = (weatherCounts[desc] || 0) + 1;
     });
 
     const weatherCountsMain: { [key: string]: number } = {};
     dayData.forEach(hour => {
-      // console.log(hour)
       const desc = hour.weather[0].main;
       weatherCountsMain[desc] = (weatherCountsMain[desc] || 0) + 1;
     });
@@ -106,11 +101,6 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     const mostFrequentWeatherMain = Object.keys(weatherCountsMain).reduce((a, b) => 
       weatherCountsMain[a] > weatherCountsMain[b] ? a : b
     );
-
-
-    // const mostFrequentHour = dayData.find(hour => 
-    //   hour.weather[0].description === mostFrequentWeather
-    // );
 
     return {
       tempMin: Math.round(min(tempsMin)),
@@ -126,7 +116,6 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       precipitation: Math.round(precipitations.reduce((a, b) => a + b) * 10) / 10,
       description: mostFrequentWeather,
       main: mostFrequentWeatherMain, 
-      // icon: mostFrequentHour?.weather[0].icon || dayData[0].weather[0].icon
     };
   };
 
@@ -167,34 +156,38 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   };
 
   const currentWeatherIcon = (weatherDesc: string, size: number) => {
+    const theme = currentTheme;
+
+    const color = theme === 'light' ? '#A9A9A9' : '#3B3B3B' 
+
     switch (weatherDesc) {
       case 'Thunderstorm': 
         return (
-          <CloudLightning size={size}/>
+          <CloudLightning size={size} color={color}/>
         )
       case 'Drizzle':
         return (
-          <CloudDrizzle size={size}/>
+          <CloudDrizzle size={size} color={color}/>
         )
       case 'Rain':
         return (
-          <CloudRain size={size}/>
+          <CloudRain size={size} color={color}/>
         )
       case 'Snow':
         return (
-          <CloudSnow size={size}/>
+          <CloudSnow size={size} color={color}/>
         )
       case 'Clear':
         return currentDayPart === 'day' ?
-          (<Sun size={size}/>) :
-          (<Moon size={size}/>);
+          (<Sun size={size} color={color}/>) :
+          (<Moon size={size} color={color}/>);
       case 'Clouds':
         return (
-          <Cloudy size={size}/>
+          <Cloudy size={size} color={color}/>
         )
       case 'Mist':
         return (
-          <CloudFog size={size}/>
+          <CloudFog size={size} color={color}/>
         )
       default: 
         return;
@@ -226,7 +219,6 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
           <Carousel className='w-full px-6 rounded-2xl'>
             <CarouselContent className='pl-4 w-full gap-2'>
               {hours.map((hour: any) => { 
-                  // console.log(hour)
                 const windDirection = getWindDirection(hour.wind.deg, currentTheme)
                 const rain = hour.rain ? hour.rain['3h'] : null;
                 const snow = hour.snow ? hour.snow['3h'] : null;
@@ -234,11 +226,6 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
                 return (
                   <CarouselItem key={hour.dt} className={`${styles.cardWrapper} day-section flex flex-col justify-center items-center gap-2 rounded-lg transition-colors p-2 max-w-35`}>
                     <div className="font-medium">{hour.time}</div>
-                    {/* <img 
-                      src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} 
-                      alt={hour.weather[0].description}
-                      className="weather-icon mx-auto w-12 h-12"
-                    /> */}
                     {currentWeatherIcon(hour.weather[0].main, 40)}
                     <div className='flex flex-col items-center mb-1'>
                       <p className={`${styles.temp} text-lg font-bold`}>{`${tempConvertation(hour.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}</p>
@@ -297,70 +284,83 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
 
   const groupedData = groupByDay(forecastData);
 
+  const fiveDayForecastStyles = {
+    wrapper: cn(currentTheme === 'light' ? 'bg-blue-100' : 'bg-neutral-700'),
+    cardWrapper: cn(currentTheme === 'light' ? 'hover:bg-blue-300 hover:shadow-neutral-700' : 
+      'bg-neutral-800 hover:bg-neutral-900 hover:shadow-neutral-500'),
+    cardInside: cn(currentTheme === 'light' ? 'bg-blue-100 ' : 'bg-neutral-500'),
+    tempMin: cn(currentTheme === 'light' ? 'text-neutral-600' : 'text-neutral-900'),
+    tempMax: cn(currentTheme === 'light' ? 'text-neutral-400' : 'text-neutral-700'),
+    windGust: cn(currentTheme === 'light' ? 'text-neutral-400' : 'text-neutral-200'),
+    weatherData: cn(currentTheme === 'light' ? 'text-neutral-500' : 'text-white'),
+  }
+
   return (
     <>
-      <Carousel className='w-full mt-8 px-6 py-4 border rounded-2xl'>
-        <h3 className='text-2xl font-bold mb-2'>Прогноз на 5 дней</h3>
+      <Carousel className={`${fiveDayForecastStyles.wrapper}
+        w-full mt-8 px-6 py-4 rounded-2xl 
+        bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/30
+        border border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]
+      `}>
+        <h3 className='text-2xl font-semibold mb-2 tracking-tight [text-shadow:0_2px_10px_rgba(8,25,61,0.28)]'>Прогноз на 5 дней</h3>
         <CarouselContent className='pl-4 w-full gap-4'>
           {Object.entries(groupedData).map(([dateKey, dayData]) => {
             const windDirection = getWindDirection(dayData.average.wind_deg, currentTheme)
-            // console.log(dayData.average.main)
-            const styles = {
-              cardWrapper: cn(currentTheme === 'light' ? 'bg-blue-100 hover:bg-blue-200 hover:shadow-neutral-700' : 'bg-neutral-800 hover:bg-neutral-900 hover:shadow-neutral-500'),
-              cardInside: cn(currentTheme === 'light' ? 'bg-white' : 'bg-neutral-500'),
-              tempMin: cn(currentTheme === 'light' ? 'text-neutral-500' : 'text-neutral-800'),
-              windGust: cn(currentTheme === 'light' ? 'text-neutral-400' : 'text-neutral-200'),
-              weatherData: cn(currentTheme === 'light' ? 'text-neutral-500' : 'text-white'),
-            }
 
             return (
-            <CarouselItem 
-              key={dateKey} 
-              onClick={() => handleDayClick(dateKey)} 
-              className={`${styles.cardWrapper} shadow hover:shadow-2xl max-w-55  rounded-lg cursor-pointer transition-colors p-4`}
-            >
-              <h4 className="text-xl font-semibold mb-2">{capitalize(dayData.dayName)}</h4>
-              
-              <div className={`${styles.cardInside} daily-average-card rounded-lg  p-2 flex flex-col items-center`}>
-                <div className="daily-average-header flex flex-col items-center mb-4">
-                  {/* <img 
-                    src={`https://openweathermap.org/img/wn/${dayData.average.icon}@2x.png`} 
-                    alt={dayData.average.description}
-                    className="weather-icon-large w-16 h-16"
-                  /> */}
-                  {currentWeatherIcon(dayData.average.main, 60)}
-                  <div className="daily-average-temp">
-                    <div className='flex justify-center gap-6 mb-2'>
-                      <span className="temp-main text-2xl font-bold">{tempConvertation(dayData.average.tempMax, currentTemp)}°</span>
-                      <span className={`${styles.tempMin} temp-main text-2xl font-bold`} >{tempConvertation(dayData.average.tempMin, currentTemp)}°</span>
-                    </div>
-                    <div className="text-center w-full max-h-6">
-                      <span className='text-sm text-nowrap text-white'>{capitalize(dayData.average.description)}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-col gap-1">
-                    <div className='flex gap-2'>
-                      <Wind size={16} className={styles.weatherData}/>
-                      <div className='flex gap-1'>
-                        <span className={`${styles.weatherData} text-sm font-medium`}>{Math.round(dayData.average.wind_speed)} м/с, {windDirection.direction}</span>
-                        <img src={windDirection.arrow} className='size-5' alt="" />
+              <CarouselItem 
+                key={dateKey} 
+                onClick={() => handleDayClick(dateKey)} 
+                className={
+                  `${fiveDayForecastStyles.cardWrapper} 
+                  shadow hover:shadow-2xl max-w-55  rounded-lg cursor-pointer transition-colors p-4
+                  bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/30`
+                }
+              >
+                <h4 className="text-xl font-semibold mb-2 tracking-tight [text-shadow:0_2px_8px_rgba(8,25,61,0.24)]">{capitalize(dayData.dayName)}</h4>
+                <div className={`
+                  ${fiveDayForecastStyles.cardInside} 
+                  daily-average-card rounded-lg  p-2 flex flex-col items-center
+                  leading-none font-semibold tracking-tight
+                `}>
+                  <div className="daily-average-header flex flex-col items-center mb-4">
+                    {currentWeatherIcon(dayData.average.main, 60)}
+                    <div className="daily-average-temp">
+                      <div className='flex justify-center gap-6 mb-2'>
+                        <span className={`${fiveDayForecastStyles.tempMax} temp-main text-2xl font-bold`}>
+                          {tempConvertation(dayData.average.tempMax, currentTemp)}°
+                        </span>
+                        <span className={`${fiveDayForecastStyles.tempMin} temp-main text-2xl font-bold`}>
+                          {tempConvertation(dayData.average.tempMin, currentTemp)}°
+                        </span>
+                      </div>
+                      <div className="text-center w-full max-h-6">
+                        <span className={`${fiveDayForecastStyles.weatherData} text-sm text-nowrap`}>{capitalize(dayData.average.description)}</span>
                       </div>
                     </div>
-                    <p className={`${styles.windGust} text-xs font-bold`}>Порывы до {dayData.average.wind_gust} м/с</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Gauge size={16} className={styles.weatherData}/>
-                    <span className={`${styles.weatherData} text-sm font-medium`}>{pressureConvertation(dayData.average.pressure, currentPressure)}</span>
-                  </div>
-                  <div className=" flex items-center gap-2">
-                    <CloudDrizzle size={16} className={styles.weatherData}/>
-                    <span className={`${styles.weatherData} text-sm font-medium`}>{dayData.average.precipitation} мм</span>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <div className='flex gap-2'>
+                        <Wind size={16} className={fiveDayForecastStyles.weatherData}/>
+                        <div className='flex gap-1'>
+                          <span className={`${fiveDayForecastStyles.weatherData} text-sm font-medium`}>{Math.round(dayData.average.wind_speed)} м/с, {windDirection.direction}</span>
+                          <img src={windDirection.arrow} className='size-5' alt="" />
+                        </div>
+                      </div>
+                      <p className={`${fiveDayForecastStyles.windGust} text-xs font-bold`}>Порывы до {dayData.average.wind_gust} м/с</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Gauge size={16} className={fiveDayForecastStyles.weatherData}/>
+                      <span className={`${fiveDayForecastStyles.weatherData} text-sm font-medium`}>{pressureConvertation(dayData.average.pressure, currentPressure)}</span>
+                    </div>
+                    <div className=" flex items-center gap-2">
+                      <CloudDrizzle size={16} className={fiveDayForecastStyles.weatherData}/>
+                      <span className={`${fiveDayForecastStyles.weatherData} text-sm font-medium`}>{dayData.average.precipitation} мм</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CarouselItem>
+              </CarouselItem>
           )})}
         </CarouselContent>
         <CarouselPrevious className='carousel-btn hover:bg-gray-100 transition-colors'/>
