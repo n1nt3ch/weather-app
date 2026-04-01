@@ -26,8 +26,14 @@ export const WeatherDisplay = () => {
   const sunset = weather?.sys.sunset
 
   const {sunriseTime, sunsetTime } = formatSunriseSunsetFromWeather(weather);
-  const [sunriseHours, sunriseMinutes] = sunriseTime.split(':');
-  const [sunsetHours, sunsetMinutes] = sunsetTime.split(':');
+  
+  const [sunriseHoursStr, sunriseMinutesStr] = sunriseTime.split(':');
+  const sunriseHours: number = parseInt(sunriseHoursStr, 10);
+  const sunriseMinutes: number = parseInt(sunriseMinutesStr, 10);
+
+  const [sunsetHoursStr, sunsetMinutesStr] = sunsetTime.split(':');
+  const sunsetHours: number = parseInt(sunsetHoursStr, 10);
+  const sunsetMinutes: number = parseInt(sunsetMinutesStr, 10);
 
   const sunriseForIcons = Number(`${sunriseHours - 3}${sunriseMinutes}`)
   const sunsetForIcons = Number(`${sunsetHours - 3}${sunsetMinutes}`)
@@ -219,7 +225,14 @@ export const WeatherDisplay = () => {
                 </h2>
               </div>
               <div className="max-w-70">
-                <StaticDaylightCard sunrise={sunrise} sunset={sunset} timezone={weather.timezone}/>
+                {/* <StaticDaylightCard sunrise={sunrise} sunset={sunset} timezone={weather.timezone}/> */}
+                {sunrise !== undefined && sunset !== undefined && (
+                  <StaticDaylightCard
+                    sunrise={sunrise}
+                    sunset={sunset}
+                    timezone={weather.timezone}
+                  />
+                )}
               </div>
               <div className="flex flex-col content-between">
                 <span className={cn("text-6xl leading-[0.95] font-semibold tracking-[-0.03em]",

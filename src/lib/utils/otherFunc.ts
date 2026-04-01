@@ -105,7 +105,7 @@ export const CurrentDate = () => {
   }
 };
 
-export const tempConvertation = (value: number, scale: string): string => {
+export const tempConvertation = (value: number, scale: string) => {
   const cToF = (value * 9 / 5) + 32;
   return scale === 'c' ? Math.round(value) : Math.round(cToF); 
 };

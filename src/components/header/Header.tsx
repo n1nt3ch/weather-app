@@ -1,7 +1,6 @@
 import { useTheme } from "@/context/theme-provider"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux'
-import { cn } from "@/lib/utils/cn.ts"
 
 import { Settings, AlertCircleIcon } from "lucide-react"
 import {

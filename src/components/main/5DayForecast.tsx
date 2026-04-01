@@ -9,7 +9,7 @@ import { min, max } from 'lodash';
 
 import type { RootState } from "@/store";
 
-import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, Sunrise, Sunset, CloudFog, Wind, Droplet, Gauge, X } from "lucide-react"
+import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, CloudFog, Wind, Droplet, Gauge, X } from "lucide-react"
 
 import {
   Carousel,
