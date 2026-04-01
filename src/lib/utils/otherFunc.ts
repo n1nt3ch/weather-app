@@ -31,15 +31,13 @@ export const getCityTime = (timezoneOffset: number): Date => {
   return new Date(utc + (timezoneOffset * 1000));
 };
 
-export const formatSunriseSunsetFromWeather = (weather: WeatherData): {
+export const formatSunriseSunsetFromWeather = (weather?: WeatherData): {
   sunriseTime: string;
   sunsetTime: string;
-  // timezoneOffsetHours: number;
 } => {
-  // const { sunrise, sunset } = weather.sys;
-  // const { timezone } = weather.timezone;
-
-  // Учитываем временную зону
+  if (!weather?.sys?.sunrise || !weather?.sys?.sunset || weather?.timezone === undefined) {
+    return { sunriseTime: "00:00", sunsetTime: "00:00" };
+  }
   const sunriseDate = new Date((weather?.sys.sunrise + weather?.timezone) * 1000);
   const sunsetDate = new Date((weather?.sys.sunset + weather?.timezone) * 1000);
 
@@ -53,25 +51,8 @@ export const formatSunriseSunsetFromWeather = (weather: WeatherData): {
   return {
     sunriseTime,
     sunsetTime,
-    // timezoneOffsetHours,
   };
 }
-
-// export const formatTimestampWithOffset = (timestamp: number, offsetHours: number): string => {
-//   const utcDate = new Date(timestamp * 1000);
-//   // Создаём дату с нужным смещением
-//   const adjustedDate = new Date(
-//     utcDate.getTime() + offsetHours * 60 * 60 * 1000
-//   );
-//   // console.log(utcDate.getTime())
-  
-//   const hours = String(adjustedDate.getHours()).padStart(2, '0');
-//   const minutes = String(adjustedDate.getMinutes()).padStart(2, '0');
-//   // console.log(adjustedDate)
-//   return `${hours}:${minutes}`;
-// };
-
-// console.log(formatTimestampWithOffset(1765179455, 36000))
 
 export const CurrentDate = () => {
   const now = new Date();
@@ -96,7 +77,6 @@ export const CurrentDate = () => {
   const month = months[now.getMonth()];
   const year = now.getUTCFullYear()
 
-  // return <>{dayName}, {day}.{month}.{year}</>;
   return {
     dayName,
     day,

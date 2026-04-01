@@ -15,10 +15,10 @@ export const WeatherDisplay = () => {
   const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
   const currentDayPart = useSelector((state: RootState) => state.dayPart.currentPart)
   const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
-  
+
   const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
     skip: !currentCity,
-  })
+  });
 
   const dispatch = useDispatch<AppDispatch>()
 
