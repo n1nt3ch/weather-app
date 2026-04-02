@@ -8,6 +8,7 @@ import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, 
 
 import type { AppDispatch, RootState } from "@/store"
 import { cn } from "@/lib/utils/cn"
+import { createPortal } from "react-dom"
 
 export const WeatherDisplay = () => {
   const [localTime, setLocalTime] = useState('');
@@ -49,34 +50,36 @@ export const WeatherDisplay = () => {
   }, [currentTimeForIcons])
 
   const currentWeatherIcon = (weatherDesc: string, size: number) => {
+    const color = !isDark(currentTheme) && currentDayPart === 'night' ? 'gray' : 'white';
+
     switch (weatherDesc) {
       case 'Thunderstorm': 
         return (
-          <CloudLightning size={size}/>
+          <CloudLightning size={size} color={color}/>
         )
       case 'Drizzle':
         return (
-          <CloudDrizzle size={size}/>
+          <CloudDrizzle size={size} color={color}/>
         )
       case 'Rain':
         return (
-          <CloudRain size={size}/>
+          <CloudRain size={size} color={color}/>
         )
       case 'Snow':
         return (
-          <CloudSnow size={size}/>
+          <CloudSnow size={size} color={color}/>
         )
       case 'Clear':
         return currentDayPart === 'day' ?
-          (<Sun size={size}/>) :
-          (<Moon size={size}/>);
+          (<Sun size={size} color={color}/>) :
+          (<Moon size={size} color={color}/>);
       case 'Clouds':
         return (
-          <Cloudy size={size}/>
+          <Cloudy size={size} color={color}/>
         )
       case 'Mist':
         return (
-          <CloudFog size={size}/>
+          <CloudFog size={size} color={color}/>
         )
       default: 
         return;
@@ -193,6 +196,27 @@ export const WeatherDisplay = () => {
     );
   };
 
+  const loadingSpin = () => {
+    const styles = {
+      wrapper: cn(currentTheme === 'light' ? 'bg-blue-100/50': 'bg-neutral-800/50'),
+    }
+
+    return createPortal(
+      <div className={`${styles.wrapper} fixed inset-0 flex items-center justify-center z-9999 p-4 cursor-pointer`}>
+        <div className="flex flex-col gap-4 rounded-2xl p-6 max-w-4xl w-full max-h-[90vh]">
+          <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-6 text-slate-900">
+            <section className="relative w-full max-w-md rounded-3xl border border-white/70 bg-white p-8 text-center shadow-2xl backdrop-blur">
+              <div className="mx-auto mb-5 size-12 animate-spin rounded-full border-4 border-slate-300 border-t-slate-900" />
+              <h2 className="text-2xl">Загружаем погоду...</h2>
+              <p className="mt-2 text-sm text-slate-600">Пожалуйста, подождите.</p>
+            </section>
+          </div>
+        </div>
+      </div>,
+      document.body
+    )
+  }
+
   useEffect(() => {
     if (!weather) return;
     
@@ -206,10 +230,12 @@ export const WeatherDisplay = () => {
     return () => clearInterval(interval);
   }, [weather]);
 
+  if (isLoading) {
+    return loadingSpin()
+  }
+
   return (
     <>
-      {isLoading && <div>Загрузка погоды...</div>}
-
       {weather && (
         <div className="pt-4">
           <div className="flex justify-between p-8 relative">
@@ -219,13 +245,12 @@ export const WeatherDisplay = () => {
                 <h2 className={cn("text-5xl leading-none font-semibold tracking-tight",
                   isDark(currentTheme) ? 
                   'text-slate-50/95 [text-shadow:0_1px_0_rgba(15,23,42,0.5),0_10px_28px_rgba(2,6,23,0.45)]' : 
-                  'text-slate-900/92 [text-shadow:0_1px_0_rgba(255,255,255,0.24),0_10px_24px_rgba(15,23,42,0.22)]' 
+                  'text-slate-300/95 [text-shadow:0_1px_0_rgba(255,255,255,0.24),0_10px_24px_rgba(15,23,42,0.22)]' 
                 )}>
                 {capitalize(weather.weather[0].description)}
                 </h2>
               </div>
               <div className="max-w-70">
-                {/* <StaticDaylightCard sunrise={sunrise} sunset={sunset} timezone={weather.timezone}/> */}
                 {sunrise !== undefined && sunset !== undefined && (
                   <StaticDaylightCard
                     sunrise={sunrise}
@@ -238,14 +263,14 @@ export const WeatherDisplay = () => {
                 <span className={cn("text-6xl leading-[0.95] font-semibold tracking-[-0.03em]",
                   isDark(currentTheme) ? 
                   'text-white/95 [text-shadow:0_1px_0_rgba(15,23,42,0.45),0_12px_32px_rgba(2,6,23,0.5)]' : 
-                  'text-slate-900/95 [text-shadow:0_1px_0_rgba(255,255,255,0.22),0_10px_30px_rgba(15,23,42,0.24)]' 
+                  'text-slate-300/95 [text-shadow:0_1px_0_rgba(255,255,255,0.22),0_10px_30px_rgba(15,23,42,0.24)]' 
                 )}>
                   {`${tempConvertation(weather.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}
                 </span>
                 <span className={cn("text-4xl leading-tight font-medium",
                   isDark(currentTheme) ? 
                   'text-sky-50/95 [text-shadow:0_1px_8px_rgba(10,30,70,0.28)]' : 
-                  'text-slate-900/60 [text-shadow:0_1px_0_rgba(15,23,42,0.45),0_8px_20px_rgba(2,6,23,0.4)]'
+                  'text-slate-300/60 [text-shadow:0_1px_0_rgba(255,255,255,0.22),0_10px_30px_rgba(15,23,42,0.24)]'
                 )}>
                   {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, ${localTime}`}
                 </span>

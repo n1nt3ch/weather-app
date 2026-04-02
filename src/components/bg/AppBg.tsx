@@ -122,52 +122,12 @@ export const AppBg = ({ children }: PropsWithChildren) => {
     typeof value === "string" && 
   WEATHER_MODES.includes(value as WeatherMode);
 
+  // const rawMode = weather?.weather?.[0]?.main;
+  // const hasWeatherData = !!currentCity && !isLoading && isWeatherMode(rawMode);
   const rawMode = weather?.weather?.[0]?.main;
-  const hasWeatherData = !!currentCity && !isLoading && isWeatherMode(rawMode);
+  const mode: WeatherMode = isWeatherMode(rawMode) ? rawMode : "Clear";
 
-  // const mode = weather?.weather?.['0']?.main;
-
-  // const rainDrops = useMemo(
-  //   () =>
-  //     Array.from({ length: 95 }, (_, i) => ({
-  //       id: i,
-  //       left: Math.random() * 100,
-  //       delay: Math.random() * 2.5,
-  //       duration: 0.7 + Math.random() * 0.9,
-  //       opacity: 0.35 + Math.random() * 0.5,
-  //     })),
-  //   []
-  // );
-
-  // const snowflakes = useMemo(
-  //   () =>
-  //     Array.from({ length: 70 }, (_, i) => ({
-  //       id: i,
-  //       left: Math.random() * 100,
-  //       delay: Math.random() * 6,
-  //       duration: 4 + Math.random() * 6,
-  //       size: 8 + Math.random() * 8,
-  //       drift: -12 + Math.random() * 24,
-  //       spin: -40 + Math.random() * 80,
-  //       opacity: 0.4 + Math.random() * 0.6,
-  //     })),
-  //   []
-  // );
-
-  // const stars = useMemo(
-  //   () =>
-  //     Array.from({ length: 55 }, (_, i) => ({
-  //       id: i,
-  //       left: Math.random() * 100,
-  //       top: Math.random() * 52,
-  //       size: 1 + Math.random() * 2.2,
-  //       delay: Math.random() * 4,
-  //       duration: 2.8 + Math.random() * 3.6,
-  //     })),
-  //   []
-  // );
-
-   const rainHeavy = useMemo(
+  const rainHeavy = useMemo(
     () =>
       Array.from({ length: 120 }, (_, i) => ({
         id: i,
@@ -377,25 +337,11 @@ export const AppBg = ({ children }: PropsWithChildren) => {
     []
   );
 
-  if (!hasWeatherData) {
-    return <>{children}</>;
-  }
+  // if (!hasWeatherData) {
+  //   return <>{children}</>;
+  // }
 
-  // const dayGradient = current.gradient;
-  // const nightGradient =
-  //   mode === "Thunderstorm"
-  //     ? "from-slate-950 via-indigo-950 to-slate-900"
-  //     : mode === "Rain"
-  //       ? "from-slate-950 via-slate-900 to-indigo-950"
-  //       : mode === "Snow"
-  //         ? "from-slate-900 via-slate-800 to-indigo-900"
-  //         : mode === "Clouds"
-  //           ? "from-slate-900 via-slate-800 to-slate-950"
-  //           : mode === "Fog"
-  //             ? "from-zinc-900 via-slate-800 to-slate-900"
-  //             : "from-slate-950 via-indigo-950 to-blue-950";
-  // const activeGradient = currentDayPhase === "night" ? nightGradient : dayGradient;
-  const mode: WeatherMode = rawMode;
+  // const mode: WeatherMode = rawMode;
   const current = weatherConfig[mode];
   const activeGradient = currentDayPhase === "night" ? current.nightGradient : current.dayGradient;
   const showClouds = ["Clouds", "Rain", "Thunderstorm", "Snow", "Drizzle", "Squall"].includes(mode);

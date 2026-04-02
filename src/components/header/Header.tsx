@@ -46,12 +46,6 @@ const Header = () => {
   const currentPressure = useSelector((state: RootState) => state.settings.selectedPressure)
   const weatherError = useSelector((state: RootState) => state.queryError.currentQueryError)
 
-  // const handleClick = () => settings === 'closed' ? setSettings('opened') : setSettings('closed')
-
-  // const settingsBtn = cn(
-  //   settings === 'closed' ? 'rotate-0' : 'rotate-180'
-  // )
-
   useEffect(() => {
       if (isDark(theme)) {
         dispatch(setDarkTheme());
@@ -62,7 +56,7 @@ const Header = () => {
   
   return (
     <header 
-      className="sticky top-0 z-50  border-b border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] 
+      className="sticky top-0 z-50  border-b border-gray-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] 
       bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/30"
     >
       <div className="container mx-auto flex h-16 items-center justify-between">
@@ -72,7 +66,6 @@ const Header = () => {
         <WeatherInput/>
         {weatherError && 
           <Alert onClick={() => dispatch(clearQueryError())} variant="destructive" 
-            // className="w-80 position absolute left-1/2 top-1 transform -translate-x-1/2 bg-accent"
             className="w-80 animate-in fade-in-0 zoom-in-95 slide-in-from-top-0 duration-500 
               position absolute left-1/2 top-1 transform -translate-x-1/2 bg-accent cursor-pointer"
             >
