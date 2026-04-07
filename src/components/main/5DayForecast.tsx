@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from "react-redux";
 import { useGet5DayForecastQuery } from '@/store/api/forecastApi/forecastApi';
-import { capitalize, getWindDirection, pressureConvertation, tempConvertation } from '@/lib/utils/otherFunc';
+import { capitalize, getWindDirection, isDark, pressureConvertation, tempConvertation } from '@/lib/utils/otherFunc';
 import { format, fromUnixTime, isToday, isTomorrow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { min, max } from 'lodash';
@@ -62,7 +62,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
   const getDayName = (date: Date): string => {
     if (isToday(date)) return 'Сегодня';
     if (isTomorrow(date)) return 'Завтра';
-    return format(date, 'EEEEEE, ii.LL', { locale: ru });
+    return format(date, 'EEEEEE, dd.MM', { locale: ru });
   };
 
   const calculateDailyAverage = (dayData: any[]): DailyAverage => {
@@ -89,6 +89,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
     });
 
     const weatherCountsMain: { [key: string]: number } = {};
+
     dayData.forEach(hour => {
       const desc = hour.weather[0].main;
       weatherCountsMain[desc] = (weatherCountsMain[desc] || 0) + 1;
@@ -136,7 +137,7 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
       grouped[dateKey].hours.push({
         ...item,
         time: format(date, 'HH:mm'),
-        dayName: getDayName(date)
+        // dayName: getDayName(date)
       });
     });
 
@@ -157,8 +158,8 @@ export const Hourly5DayForecast: React.FC<Hourly5DayForecastProps> = ({ lat, lon
 
   const currentWeatherIcon = (weatherDesc: string, size: number) => {
     const theme = currentTheme;
-
-    const color = theme === 'light' ? '#A9A9A9' : '#3B3B3B' 
+    // const color = theme === 'light' ? '#A9A9A9' : '#3B3B3B' 
+    const color = isDark(theme) ? '#3B3B3B' : '#A9A9A9'
 
     switch (weatherDesc) {
       case 'Thunderstorm': 
