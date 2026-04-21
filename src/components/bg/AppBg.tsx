@@ -113,7 +113,7 @@ export const AppBg = ({ children }: PropsWithChildren) => {
   // const [phase, setPhase] = useState<DayPhase>("day");
   // const [now, setNow] = useState(new Date());
   const currentCity = useSelector((state: RootState) => state.city.selectedCity)
-  const { data: weather, isLoading } = useGetCurrentWeatherQuery(currentCity, {
+  const { data: weather } = useGetCurrentWeatherQuery(currentCity, {
       skip: !currentCity,
     })
   const currentDayPhase = useSelector((state: RootState) => state.dayPart.currentPart)
