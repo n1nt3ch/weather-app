@@ -38,6 +38,9 @@ import WeatherInput from './WeatherInput.tsx'
 import { isDark } from "@/lib/utils/otherFunc.ts"
 import { buttonAnimation } from "@/lib/styles.ts"
 
+import weatherLogoDark from '@/context/icons/weather-logo-dark.png';
+import weatherLogoLight from '@/context/icons/weather-logo-light.png';
+
 const Header = () => {
   const { theme, setTheme } = useTheme();
   const dispatch = useDispatch<AppDispatch>()
@@ -60,7 +63,7 @@ const Header = () => {
       bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/30"
     >
       <div className="container mx-auto flex h-16 items-center justify-between">
-          <img src={isDark(theme) ? 'src/context/icons/weather-logo(dark).png' : 'src/context/icons/weather-logo(light).png'} 
+          <img src={isDark(theme) ? weatherLogoDark : weatherLogoLight} 
           alt="Weather app logo" 
           className="h-14"/>
         <WeatherInput/>
