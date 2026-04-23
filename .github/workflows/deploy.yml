@@ -32,6 +32,11 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_OPENWEATHER_API_KEY: ${{ secrets.VITE_OPENWEATHER_API_KEY }}
+          VITE_FORECASTWEATHER_API_KEY: ${{ secrets.VITE_FORECASTWEATHER_API_KEY }}
+          VITE_SEARCHCITY_API_KEY: ${{ secrets.VITE_SEARCHCITY_API_KEY }}
+          VITE_NEWSAPI_KEY: ${{ secrets.VITE_NEWSAPI_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
