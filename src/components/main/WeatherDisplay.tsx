@@ -2,9 +2,9 @@ import { useGetCurrentWeatherQuery } from "@/store/api/weatherApi/weatherApi"
 import { setDayPart, setNightPart } from "@/store/slices/partOfTheDaySlice"
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { capitalize, isDark, getCityTime, CurrentDate, tempConvertation, formatSunriseSunsetFromWeather } from "@/lib/utils/otherFunc"
+import { capitalize, isDark, getCityTime, CurrentDate, tempConvertation, formatSunriseSunsetFromWeather, getWindDirection, pressureConvertation} from "@/lib/utils/otherFunc"
 import { Hourly5DayForecast } from "./5DayForecast"
-import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, Sunrise, Sunset, CloudFog } from "lucide-react"
+import { Cloudy, CloudDrizzle, CloudRain, CloudSnow, Sun, CloudLightning, Moon, Sunrise, Sunset, CloudFog, Droplet, Wind, Gauge, Eye } from "lucide-react"
 
 import type { AppDispatch, RootState } from "@/store"
 import { cn } from "@/lib/utils/cn"
@@ -14,6 +14,7 @@ export const WeatherDisplay = () => {
   const [localTime, setLocalTime] = useState('');
   const currentCity = useSelector((state: RootState) => state.city.selectedCity)
   const currentTemp = useSelector((state: RootState) => state.settings.selectedTemp)
+  const currentPressure = useSelector((state: RootState) => state.settings.selectedPressure)
   const currentDayPart = useSelector((state: RootState) => state.dayPart.currentPart)
   const currentTheme = useSelector((state: RootState) => state.settings.selectedTheme)
 
@@ -34,11 +35,25 @@ export const WeatherDisplay = () => {
 
   const [sunsetHoursStr, sunsetMinutesStr] = sunsetTime.split(':');
   const sunsetHours: number = parseInt(sunsetHoursStr, 10);
-  const sunsetMinutes: number = parseInt(sunsetMinutesStr, 10);
+  // const sunsetMinutes: number = parseInt(sunsetMinutesStr, 10);
 
   const sunriseForIcons = Number(`${sunriseHours - 3}${sunriseMinutes}`)
-  const sunsetForIcons = Number(`${sunsetHours - 3}${sunsetMinutes}`)
+  const sunsetForIcons = Number(`${sunsetHours - 3}${sunsetMinutesStr}`)
   const currentTimeForIcons = Number(localTime.split(':').join(''))
+
+  console.log(`${sunriseForIcons} рассвет`)
+  console.log(`${sunsetForIcons} закат`)
+  console.log(`${currentTimeForIcons} текущее время`)
+  console.log(`${sunriseHoursStr} 123`)
+  console.log(`${sunriseMinutesStr} 123`)
+
+
+  const wind = weather?.wind.deg ?? 0 
+  const windDirection = getWindDirection(wind, 'dark')
+
+  const rain = weather?.rain?.["1h"] ?? 0
+  const snow = weather?.snow?.["1h"] ?? 0
+  const precipitation = rain + snow
 
   useEffect(() => {
     if(currentTimeForIcons === 0) return;
@@ -234,11 +249,13 @@ export const WeatherDisplay = () => {
     return loadingSpin()
   }
 
+  // console.log(weather)
+
   return (
     <>
       {weather && (
         <div className="pt-4">
-          <div className="flex justify-between p-8 relative">
+          <div className="p-8 relative">
             <div className="flex flex-col gap-10">
               <div className="flex items-center gap-3">
                 {currentWeatherIcon(weather.weather[0].main, 50)}
@@ -267,6 +284,13 @@ export const WeatherDisplay = () => {
                 )}>
                   {`${tempConvertation(weather.main.temp, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}
                 </span>
+                <span className={cn("text-sm leading-[0.95] font-semibold tracking-[-0.03em] pb-2",
+                  isDark(currentTheme) ? 
+                  'text-white/70 [text-shadow:0_1px_0_rgba(15,23,42,0.45),0_12px_32px_rgba(2,6,23,0.5)]' : 
+                  'text-slate-200/95 [text-shadow:0_1px_0_rgba(255,255,255,0.22),0_10px_30px_rgba(15,23,42,0.24)]' 
+                )}>
+                  {`ощущается как: ${tempConvertation(weather.main.feels_like, currentTemp)}${currentTemp === 'c' ? '°C' : '°F'}`}
+                </span>
                 <span className={cn("text-4xl leading-tight font-medium",
                   isDark(currentTheme) ? 
                   'text-sky-50/95 [text-shadow:0_1px_8px_rgba(10,30,70,0.28)]' : 
@@ -274,6 +298,58 @@ export const WeatherDisplay = () => {
                 )}>
                   {`${CurrentDate().dayName}, ${CurrentDate().day}.${CurrentDate().month}.${CurrentDate().year}, ${localTime}`}
                 </span>
+              </div>
+              <div className={cn("flex text-md font-semibold tracking-[-0.03em]",
+                  isDark(currentTheme) ? 
+                  'text-white/95 [text-shadow:0_1px_0_rgba(15,23,42,0.45),0_12px_32px_rgba(2,6,23,0.5)]' : 
+                  'text-slate-300/95 [text-shadow:0_1px_0_rgba(255,255,255,0.22),0_10px_30px_rgba(15,23,42,0.24)]' 
+                )}>
+                <div className="flex flex-col justify-center gap-1 border-1 rounded-l-md border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                  <div className="flex justify-center gap-1 p-2 border-b-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                    <p>Ветер</p>
+                    <Wind/>
+                  </div>
+                  <div className='flex items-center p-2'>
+                    <span className="">{Math.round(weather.wind.speed)} м/с, {windDirection.direction}</span>
+                    <img src={windDirection.arrow} className='size-4' alt="" />
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center gap-1 border-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                  <div className="flex justify-center gap-1 p-2 border-b-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                    <p>Влажность</p>
+                    <Droplet/>
+                  </div>
+                  <div className="p-2 text-center">
+                    <p>{weather.main.humidity}%</p>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center gap-1 border-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                  <div className="flex justify-center gap-1 p-2 border-b-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                    <p>Осадки</p>
+                    <CloudDrizzle/>
+                  </div>
+                  <div className="p-2 text-center">
+                    <p>{precipitation.toFixed(1)} мм</p>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center gap-1 border-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                  <div className="flex justify-center gap-1 p-2 border-b-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                    <p>Видимость</p>
+                    <Eye/>
+                  </div>
+                  <div className="p-2 text-center">
+                    <p>{weather.visibility / 1000} км</p>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center gap-1 border-1 rounded-r-md border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                  <div className="flex justify-center gap-1 p-2 border-b-1 border-white/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                    <p>Давление</p>
+                    <Gauge/>
+                  </div>
+                  <div className="p-2 text-center">
+                    <p>{pressureConvertation(weather.main.pressure, currentPressure)}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

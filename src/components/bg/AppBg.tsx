@@ -122,6 +122,8 @@ export const AppBg = ({ children }: PropsWithChildren) => {
     typeof value === "string" && 
   WEATHER_MODES.includes(value as WeatherMode);
 
+  console.log(currentDayPhase)
+
   // const rawMode = weather?.weather?.[0]?.main;
   // const hasWeatherData = !!currentCity && !isLoading && isWeatherMode(rawMode);
   const rawMode = weather?.weather?.[0]?.main;
